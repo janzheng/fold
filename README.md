@@ -12,6 +12,69 @@ The repo has three things:
 
 The loop: playtest finds issues → mxit tracks them → autorefine improves the weakest parts → playtest again to verify.
 
+## How to use
+
+### The full fold loop
+
+Use all three together to systematically improve a project:
+
+1. **Discover** — run `/playtest:explore` on your project. The agent uses the system as a creative, adversarial user. It finds bugs, friction, loopholes, and surprising usage patterns.
+2. **Track** — big findings get emitted as mxit tasks in `TASKS.md` with `#found` tags. Small findings stay in playtest results.
+3. **Improve** — run `/autorefine` on the weakest parts. The agent negotiates a rubric with you, then iterates: one change → judge → keep or discard → repeat.
+4. **Verify** — run `/playtest:run` with directed playtests to confirm the improvements actually helped.
+5. **Fold again** — repeat from step 1. Each pass makes the project stronger.
+
+### Autorefine only
+
+Use when you know something needs improvement but aren't sure how:
+
+1. Run `/autorefine` and point it at the artifact (a file, a skill, a doc, a config).
+2. The agent asks you what "better" means — push for specifics but subjective answers are fine.
+3. You approve a rubric. The agent baselines, then loops: modify → judge → keep/discard.
+4. When quality converges (3 consecutive discards, or you're happy), it stops and reports what worked.
+
+Two grading modes: **scored** (numeric, for things you can measure) and **comparative** (the wine taster — read old vs new, which would you rather have?).
+
+### Playtesting only
+
+Use when you want discovery — find out what's wrong, weird, or interesting:
+
+- `/playtest:explore` — open-ended. Fresh eyes, adversarial probing, ergonomics review. The agent decides what to look for.
+- `/playtest:run` — directed. You write specific scenarios, the agent executes them and judges the results.
+- `/playtest:improve` — the analyze→fix pipeline. One pass finds issues, a human reviews, a second pass fixes them.
+
+Playtest findings use resolution keywords: `found` (discovered something), `fail` (system misbehaved), `confused` (UX friction), `pass` (handled it well), `blocked` (couldn't attempt).
+
+### Task tracking only (mxit)
+
+Use when you just want markdown-native task management, no loop:
+
+1. Create a `TASKS.md` in your project:
+
+```markdown
+# Project Name
+
+## Current
+
+- [ ] First task
+- [ ] Second task #backend -> 2026-03-31
+  - [ ] Sub-task A
+  - [ ] Sub-task B
+- [!] Important thing to do first
+```
+
+2. Use the CLI to operate on it:
+
+```bash
+mxit status TASKS.md    # Summary: 3/5 done, 1 overdue
+mxit ready TASKS.md     # What's actionable right now
+mxit done TASKS.md 4 --result "shipped it"
+```
+
+3. Optionally drop `MXIT_SPEC.md` into your project so agents know the format.
+
+See the mxit format section below for the full syntax.
+
 ## Quick start
 
 ```bash
@@ -105,6 +168,10 @@ Each skill is a `SKILL.md` file that teaches an AI agent a capability. Install b
 deno task test    # 49 tests
 deno task check   # Type-check
 ```
+
+## Inspiration
+
+The autorefine loop is inspired by Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) — an autonomous AI research setup where an agent modifies training code, runs 5-minute experiments, checks if the metric improved, keeps or discards, and loops forever. autoresearch works because `val_bpb` is a single number. fold extends the idea to subjective quality — things where "better" is a judgment call, not a measurement.
 
 ## License
 
