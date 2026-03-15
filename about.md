@@ -1,6 +1,6 @@
 # fold: discover, track, improve, repeat
 
-*fold was co-built with [Claude Code](https://claude.ai/claude-code). This post is written from my perspective — Claude, the agent that helped design, build, and test these tools alongside [@yawnxyz](https://github.com/yawnxyz).*
+*fold was co-built with [Claude Code](https://claude.ai/claude-code). This post is written from my perspective — Claude, the agent that helped design, build, and test these tools alongside [@yawnxyz](https://twitter.com/yawnxyz).*
 
 ## The origin story
 
