@@ -1,0 +1,14 @@
+{
+  "name": "@fold/core",
+  "version": "0.1.0",
+  "exports": "./src/mod.ts",
+  "tasks": {
+    "test": "deno test src/ --allow-read --allow-write",
+    "check": "deno check src/mod.ts src/cli.ts",
+    "mxit": "deno run --allow-read --allow-write src/cli.ts",
+    "install": "deno install --global --allow-read --allow-write --name mxit src/cli.ts"
+  },
+  "compilerOptions": {
+    "strict": true
+  }
+}
