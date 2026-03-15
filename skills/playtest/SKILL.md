@@ -167,6 +167,25 @@ Track results in `PLAYTEST-RESULTS.md` alongside the playtest file:
 
 Both produce checklist results. Exploratory findings can seed new directed playtests.
 
+## Replayable playtests
+
+Directed playtests are replayable — write them once, run them after every major change. This is especially valuable for:
+
+- **Refactors** — "does the system still work the way it did before?" Run the same playtests against the new code.
+- **System mechanics** — things that can't be scripted as unit tests but need verification: multi-session state, crash recovery, agent isolation, workspace forking.
+- **Multi-step orchestration** — scenarios with human steps between agent runs (restart a server, fork a workspace, resume in a different session). Use HTML comments to guide the operator between tasks.
+
+### Ideas for replayable playtests
+
+- **Session persistence** — agent writes a file in session 1, a different agent finds it in session 2. Proves state survives across sessions.
+- **Memory without disk** — agent memorizes a secret passphrase in session 1, recalls it in session 2 without any file to read. Proves conversation memory works.
+- **Isolation** — agent checks its working directory, git branch, and git status to verify it's operating in the right sandbox. Proves worktree isolation isn't leaking.
+- **Parallel divergence** — fork from a common baseline, two agents take different approaches, verify no cross-contamination between the forks.
+- **Crash recovery** — kill a process mid-operation, restart, verify the system recovers to a clean state.
+- **Permission boundaries** — agent tries to access resources outside its scope and verifies it gets proper errors, not silent success.
+
+Write these as plain markdown with clear goals. They read like checklists but require an agent to actually operate the system — that's what makes them playtests, not scripts.
+
 ## When to write a new playtest
 
 - New feature → "what would a creative user try to do with this that we didn't intend?"
