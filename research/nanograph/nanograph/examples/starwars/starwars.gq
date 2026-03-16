@@ -1,0 +1,426 @@
+// Star Wars Knowledge Graph — Merged Query Suite
+
+// ── Search queries ──────────────────────────────────────────────────────────
+
+query keyword_search($q: String)
+  @description("Find characters whose notes contain the query tokens.")
+  @instruction("Use for exact term lookup across character notes.")
+{
+    match {
+        $c: Character
+        search($c.note, $q)
+    }
+    return { $c.slug, $c.name }
+    order { $c.slug asc }
+}
+
+query fuzzy_search($q: String)
+  @description("Find characters by name with typo tolerance.")
+  @instruction("Use when the user is likely to misspell a name.")
+{
+    match {
+        $c: Character
+        fuzzy($c.name, $q)
+    }
+    return { $c.slug, $c.name }
+    order { $c.slug asc }
+}
+
+query match_text_search($q: String)
+  @description("Match contiguous text spans inside character notes.")
+  @instruction("Prefer for phrase-style note matching instead of bag-of-words search.")
+{
+    match {
+        $c: Character
+        match_text($c.note, $q)
+    }
+    return { $c.slug, $c.name }
+    order { $c.slug asc }
+}
+
+query bm25_search($q: String)
+  @description("Rank characters by lexical relevance against their notes.")
+  @instruction("Use for keyword-heavy queries where exact term hits should dominate.")
+{
+    match { $c: Character }
+    return { $c.slug, $c.name, bm25($c.note, $q) as score }
+    order { bm25($c.note, $q) desc }
+    limit 5
+}
+
+query semantic_search($q: String)
+  @description("Rank characters by semantic similarity against their embedded notes.")
+  @instruction("Use for broad conceptual search, not exact spelling.")
+{
+    match { $c: Character }
+    return {
+        $c.slug as slug,
+        $c.name as name,
+        nearest($c.embedding, $q) as score
+    }
+    order { nearest($c.embedding, $q) }
+    limit 5
+}
+
+query hybrid_search($q: String)
+  @description("Blend semantic and lexical ranking across character notes.")
+  @instruction("Use when both exact wording and broader meaning matter.")
+{
+    match { $c: Character }
+    return {
+        $c.slug as slug,
+        $c.name as name,
+        nearest($c.embedding, $q) as semantic_distance,
+        bm25($c.note, $q) as lexical_score,
+        rrf(nearest($c.embedding, $q), bm25($c.note, $q)) as hybrid_score
+    }
+    order { rrf(nearest($c.embedding, $q), bm25($c.note, $q)) desc }
+    limit 5
+}
+
+query family_semantic($slug: String, $q: String)
+  @description("Search only within a character's parents, ranked semantically.")
+  @instruction("Use after traversal when you want ranking inside the family subgraph.")
+{
+    match {
+        $c: Character { slug: $slug }
+        $c hasParent $p
+    }
+    return { $p.slug, $p.name }
+    order { nearest($p.embedding, $q) }
+    limit 3
+}
+
+query students_search($mentor: String, $q: String)
+  @description("Rank a mentor's students by lexical relevance against their notes.")
+  @instruction("Use when a traversal should define scope before ranking.")
+{
+    match {
+        $m: Character { slug: $mentor }
+        $s hasMentor $m
+    }
+    return { $s.slug, $s.name, bm25($s.note, $q) as score }
+    order { bm25($s.note, $q) desc }
+    limit 5
+}
+
+query character_profile($slug: String) {
+    match { $c: Character { slug: $slug } }
+    return { $c.slug, $c.name, $c.note, $c.alignment, $c.tags }
+    limit 1
+}
+
+query same_debut($film: String) {
+    match {
+        $f: Film { slug: $film }
+        $c debutsIn $f
+    }
+    return { $c.slug, $c.name }
+    order { $c.slug asc }
+}
+
+query add_edge_parent($from: String, $to: String) {
+    insert HasParent { from: $from, to: $to }
+}
+
+// ── Faction queries ─────────────────────────────────────────────────────────
+
+query jedi() {
+    match {
+        $c: Character
+        $c affiliatedWith $f
+        $f.name = "Jedi Order"
+    }
+    return { $c.name, $c.rank, $c.era }
+    order { $c.name asc }
+}
+
+query sith() {
+    match {
+        $c: Character
+        $c affiliatedWith $f
+        $f.name = "Sith Order"
+    }
+    return { $c.name, $c.rank }
+}
+
+query rebels() {
+    match {
+        $c: Character
+        $c affiliatedWith $f
+        $f.name = "Rebel Alliance"
+    }
+    return { $c.name }
+    order { $c.name asc }
+}
+
+query faction_members($faction: String) {
+    match {
+        $f: Faction { name: $faction }
+        $c affiliatedWith $f
+    }
+    return { $c.name, $c.rank }
+    order { $c.name asc }
+}
+
+// ── Mentor queries ──────────────────────────────────────────────────────────
+
+query mentors_of($name: String) {
+    match {
+        $c: Character { name: $name }
+        $c hasMentor $m
+    }
+    return { $m.name, $m.rank }
+}
+
+query students_of($name: String) {
+    match {
+        $m: Character { name: $name }
+        $s hasMentor $m
+    }
+    return { $s.name, $s.era }
+    order { $s.name asc }
+}
+
+query yoda_grand_students() {
+    match {
+        $y: Character { name: "Yoda" }
+        $s hasMentor $y
+        $gs hasMentor $s
+    }
+    return { $s.name, $gs.name }
+    order { $s.name asc }
+}
+
+// ── Family queries ──────────────────────────────────────────────────────────
+
+query children_of($name: String) {
+    match {
+        $parent: Character { name: $name }
+        $child hasParent $parent
+    }
+    return { $child.name }
+}
+
+query parents_of($name: String) {
+    match {
+        $child: Character { name: $name }
+        $child hasParent $parent
+    }
+    return { $parent.name }
+}
+
+// ── Combat queries ──────────────────────────────────────────────────────────
+
+query all_duels() {
+    match {
+        $a: Character
+        $a fought $b
+    }
+    return { $a.name, $b.name }
+    order { $a.name asc }
+}
+
+query opponents_of($name: String) {
+    match {
+        $c: Character { name: $name }
+        $c fought $opp
+    }
+    return { $opp.name }
+}
+
+// ── Starship queries ────────────────────────────────────────────────────────
+
+query ship_owners() {
+    match {
+        $c: Character
+        $c owns $s
+    }
+    return { $c.name, $s.name, $s.class }
+    order { $c.name asc }
+}
+
+// ── Weapon queries ──────────────────────────────────────────────────────────
+
+query wielders() {
+    match {
+        $c: Character
+        $c wields $w
+    }
+    return { $c.name, $w.name, $w.color }
+    order { $c.name asc }
+}
+
+// ── Planet queries ──────────────────────────────────────────────────────────
+
+query from_planet($planet: String) {
+    match {
+        $p: Planet { name: $planet }
+        $c originatesFrom $p
+    }
+    return { $c.name, $c.species }
+    order { $c.name asc }
+}
+
+// ── Heroes vs Villains ──────────────────────────────────────────────────────
+
+query heroes() {
+    match {
+        $c: Character
+        $c.alignment = "hero"
+    }
+    return { $c.name, $c.species, $c.era }
+    order { $c.name asc }
+}
+
+query villains() {
+    match {
+        $c: Character
+        $c.alignment = "villain"
+    }
+    return { $c.name, $c.species, $c.rank }
+    order { $c.name asc }
+}
+
+// ── Aggregation queries ─────────────────────────────────────────────────────
+
+query faction_sizes() {
+    match {
+        $c: Character
+        $c affiliatedWith $f
+    }
+    return {
+        $f.name
+        count($c) as members
+    }
+    order { members desc }
+}
+
+query top_mentors() {
+    match {
+        $s: Character
+        $s hasMentor $m
+    }
+    return {
+        $m.name
+        count($s) as students
+    }
+    order { students desc }
+}
+
+query battle_veterans() {
+    match {
+        $c: Character
+        $c participatedIn $b
+    }
+    return {
+        $c.name
+        count($b) as battles
+    }
+    order { battles desc }
+    limit 5
+}
+
+// ── Cross-domain queries ────────────────────────────────────────────────────
+
+query jedi_pilots() {
+    match {
+        $c: Character
+        $c affiliatedWith $f
+        $f.name = "Jedi Order"
+        $c owns $s
+    }
+    return { $c.name, $s.name }
+}
+
+query unaffiliated() {
+    match {
+        $c: Character
+        not { $c affiliatedWith $_ }
+    }
+    return { $c.name }
+    order { $c.name asc }
+}
+
+query tatooine_locations() {
+    match {
+        $p: Planet { name: "Tatooine" }
+        $loc locatedAt $p
+    }
+    return { $loc.name, $loc.location_type }
+}
+
+// ── Film/date queries ───────────────────────────────────────────────────────
+
+query film_timeline() {
+    match { $f: Film }
+    return { $f.episode, $f.name, $f.release_date }
+    order { $f.release_date asc }
+}
+
+query debut_film($slug: String)
+  @description("Show the debut film for a character identified by slug.")
+  @instruction("Use for keyed cross-type traversal from a character to a film.")
+{
+    match {
+        $c: Character { slug: $slug }
+        $c debutsIn $f
+    }
+    return { $c.name, $f.name, $f.release_date }
+}
+
+query original_trilogy_cast() {
+    match {
+        $c: Character
+        $c debutsIn $f
+        $f.release_date < date("1984-01-01")
+    }
+    return { $c.name, $f.name, $f.release_date }
+    order { $f.release_date asc }
+}
+
+query prequel_battles() {
+    match {
+        $b: Battle
+        $b depictedIn $f
+        $f.episode <= 3
+    }
+    return { $b.name, $f.name, $f.release_date }
+    order { $f.release_date asc }
+}
+
+query cast_of($film_slug: String) {
+    match {
+        $f: Film { slug: $film_slug }
+        $c debutsIn $f
+    }
+    return { $c.name, $f.name }
+    order { $c.name asc }
+}
+
+// ── Mutations ───────────────────────────────────────────────────────────────
+
+query add_character() {
+    insert Character {
+        slug: "ezra-bridger"
+        name: "Ezra Bridger"
+        note: "Lothal rebel and Force-sensitive ally"
+        species: "Human"
+        gender: "Male"
+        rank: "Padawan"
+        era: "original"
+        alignment: "hero"
+        tags: ["jedi", "rebel"]
+    }
+}
+
+query update_character($slug: String) {
+    update Character set {
+        alignment: "neutral"
+        tags: ["updated"]
+    } where slug = $slug
+}
+
+query delete_character($slug: String) {
+    delete Character where slug = $slug
+}

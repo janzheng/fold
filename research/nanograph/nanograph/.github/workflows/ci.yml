@@ -1,0 +1,198 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  changes:
+    name: Change Scope
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    outputs:
+      docs_only: ${{ steps.filter.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          predicate-quantifier: every
+          filters: |
+            docs_only:
+              - 'docs/**'
+              - 'README.md'
+
+  docs-only:
+    name: Docs Only
+    needs: changes
+    if: needs.changes.outputs.docs_only == 'true'
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    steps:
+      - run: echo "Docs-only change detected; skipping build and test matrix."
+
+  core-rust:
+    name: Core Rust
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "27.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install 1.91.0 --profile minimal --component clippy
+
+      - name: Cache cargo registry and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ci-core-linux-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ci-core-linux-
+
+      - name: Cargo check
+        run: cargo check --workspace --lib --bins --tests
+
+      - name: Core tests
+        run: cargo test -p nanograph --lib --tests
+
+      - name: Workspace clippy
+        run: cargo clippy --workspace --lib --bins --tests
+
+      - name: Build Rust FFI crate
+        run: cargo build -p nanograph-ffi
+
+  cli-e2e:
+    name: CLI E2E
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "27.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install 1.91.0 --profile minimal
+
+      - name: Cache cargo registry and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ci-cli-linux-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ci-cli-linux-
+
+      - name: CLI end-to-end tests
+        run: cargo test -p nanograph-cli
+
+  ts-sdk:
+    name: TypeScript SDK
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "27.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install 1.91.0 --profile minimal
+
+      - name: Cache cargo registry and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ci-ts-linux-cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ci-ts-linux-cargo-
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+          key: ci-ts-linux-npm-${{ hashFiles('package-lock.json', 'crates/nanograph-ts/package.json') }}
+          restore-keys: ci-ts-linux-npm-
+
+      - name: Install TypeScript SDK dependencies
+        run: npm install
+        working-directory: crates/nanograph-ts
+
+      - name: TypeScript SDK tests
+        run: npm test
+        working-directory: crates/nanograph-ts
+
+      - name: TypeScript consumer smoke test
+        run: bash tools/ts-sdk/smoke_test_consumer.sh
+
+  swift-sdk:
+    name: Swift SDK
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "27.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install 1.91.0 --profile minimal
+
+      - name: Cache cargo registry and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ci-swift-macos-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ci-swift-macos-
+
+      - name: Build Swift FFI library
+        run: cargo build -p nanograph-ffi
+
+      - name: Swift SDK tests
+        run: swift test
+        working-directory: crates/nanograph-ffi/swift
+        env:
+          CLANG_MODULE_CACHE_PATH: ${{ runner.temp }}/clang-module-cache
+          SWIFTPM_MODULECACHE_OVERRIDE: ${{ runner.temp }}/swiftpm-module-cache

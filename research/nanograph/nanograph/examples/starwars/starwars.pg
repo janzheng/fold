@@ -1,0 +1,144 @@
+// Star Wars Knowledge Graph — NanoGraph Schema (Merged)
+// 9 node types, 26 edge types
+
+// ── Nodes ───────────────────────────────────────────────────────────────────
+
+node Film @description("Films used for debut, cast, and timeline traversal across the saga.") @instruction("Use film slugs for stable lookups; names are for display.") {
+    slug: String @key @description("Stable film identifier used in query aliases and edges.")
+    name: String
+    episode: I32
+    release_date: Date
+}
+
+node Character @description("Named Star Wars characters used for search, lineage, affiliation, and combat traversal.") @instruction("Use Character.slug for programmatic lookups. note and embedding are the retrieval fields for search-style queries.") {
+    slug: String @key @description("Stable canonical character identifier used in aliases and edge endpoints.")
+    name: String @description("Human-readable character name.")
+    note: String @description("Short biography used for lexical and semantic search.")
+    embedding: Vector(8) @embed(note) @index @description("Semantic embedding derived from note for semantic and hybrid search queries.")
+    species: String
+    gender: String
+    rank: String?
+    era: enum(prequel, clone_wars, original)
+    alignment: enum(hero, villain, neutral)
+    tags: [String]?
+}
+
+node Droid {
+    slug: String @key
+    name: String
+    note: String
+    model: String
+}
+
+node Faction {
+    slug: String @key
+    name: String
+    note: String
+    side: enum(light, dark, independent)
+}
+
+node Planet {
+    slug: String @key
+    name: String
+    note: String
+    terrain: String
+    climate: enum(arid, temperate, swamp, forest, urban, volcanic)
+}
+
+node Starship {
+    slug: String @key
+    name: String
+    note: String
+    model: String
+    class: String
+    manufacturer: String
+}
+
+node Weapon {
+    slug: String @key
+    name: String
+    note: String
+    weapon_type: String
+    color: String
+}
+
+node Battle {
+    slug: String @key
+    name: String
+    note: String
+    era: enum(prequel, clone_wars, original)
+    outcome: String
+}
+
+node Location {
+    slug: String @key
+    name: String
+    note: String
+    location_type: String
+}
+
+// ── Film connections ────────────────────────────────────────────────────────
+
+edge DebutsIn: Character -> Film @description("Links a character to the first film where they appear.")
+edge DepictedIn: Battle -> Film
+
+// ── Family & Personal ───────────────────────────────────────────────────────
+
+edge HasParent: Character -> Character @description("Parent-child relationship between two characters.")
+edge SiblingOf: Character -> Character
+edge MarriedTo: Character -> Character
+edge ClonedFrom: Character -> Character
+
+// ── Training ────────────────────────────────────────────────────────────────
+
+edge HasMentor: Character -> Character @description("Training relationship from a student to a mentor.") @instruction("Use for direct training lineage, not for broad inspiration or affiliation.")
+
+// ── Affiliation & Ownership ─────────────────────────────────────────────────
+
+edge AffiliatedWith: Character -> Faction {
+    role: String?
+}
+edge Owns: Character -> Starship
+edge FactionOwns: Faction -> Starship
+edge RulesFaction: Character -> Faction {
+    title: String
+}
+edge RulesPlanet: Character -> Planet {
+    title: String
+}
+
+// ── Origin & Location ───────────────────────────────────────────────────────
+
+edge OriginatesFrom: Character -> Planet
+edge DroidOriginatesFrom: Droid -> Planet
+edge LocatedIn: Character -> Planet {
+    status: String
+}
+edge LocatedAt: Location -> Planet
+
+// ── Conflict & Action ───────────────────────────────────────────────────────
+
+edge Fought: Character -> Character @description("Combat encounter between two characters.") {
+    location: String
+}
+edge Captured: Character -> Character
+edge HiredBy: Character -> Character {
+    purpose: String
+}
+edge ParticipatedIn: Character -> Battle {
+    role: String
+}
+edge TookPlaceOn: Battle -> Planet
+
+// ── Transformation ──────────────────────────────────────────────────────────
+
+edge Becomes: Character -> Character {
+    event: String
+}
+
+// ── Droid & Equipment ───────────────────────────────────────────────────────
+
+edge BuiltBy: Droid -> Character
+edge HasCompanion: Droid -> Droid
+edge HasCoPilot: Character -> Character
+edge Wields: Character -> Weapon

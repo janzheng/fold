@@ -1,0 +1,21 @@
+/target
+/crates/nanograph/target/
+*.nano
+*.nanograph
+*.lance
+.DS_Store
+docs/internal/
+docs/bench/
+docs/backlog/
+docs/archive/
+docs/dev/backlog.md
+backlog/
+.claude/
+.env
+.env.nano
+search-test/
+
+# SDK build artifacts
+crates/nanograph-ffi/swift/.build/
+node_modules/
+*.node

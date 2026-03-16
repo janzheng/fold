@@ -1,0 +1,16 @@
+[package]
+name = "nanograph-ffi"
+version = "1.0.0"
+edition = "2024"
+description = "NanoGraph C ABI for Swift and other native clients"
+repository = "https://github.com/nanograph/nanograph"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+nanograph = { path = "../nanograph", version = "1.0.0" }
+tokio = { workspace = true }
+serde_json = { workspace = true }
+arrow-ipc = { workspace = true }

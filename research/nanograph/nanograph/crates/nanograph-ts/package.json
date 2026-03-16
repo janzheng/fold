@@ -1,0 +1,44 @@
+{
+  "name": "nanograph-db",
+  "version": "1.0.0",
+  "description": "NanoGraph — embedded typed property graph DB for TypeScript/Node.js",
+  "main": "index.js",
+  "types": "types.d.ts",
+  "napi": {
+    "binaryName": "nanograph",
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc"
+    ]
+  },
+  "scripts": {
+    "install": "node scripts/install.cjs",
+    "build": "napi build --platform --js index.js --release",
+    "build:debug": "napi build --platform --js index.js",
+    "test": "node --test __test__/index.spec.mjs"
+  },
+  "dependencies": {
+    "@napi-rs/cli": "^3.0.0",
+    "apache-arrow": "^21.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nanograph/nanograph"
+  },
+  "files": [
+    "index.js",
+    "types.d.ts",
+    "*.node",
+    "scripts/",
+    "src/",
+    "build.rs",
+    "Cargo.toml"
+  ]
+}

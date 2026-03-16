@@ -1,0 +1,32 @@
+[package]
+name = "nanograph-cli"
+version = "1.0.0"
+edition = "2024"
+description = "CLI for NanoGraph — the embedded property graph database. No server, schema-as-code."
+repository = "https://github.com/nanograph/nanograph"
+license = "MIT"
+readme = "../../README.md"
+
+[[bin]]
+name = "nanograph"
+path = "src/main.rs"
+
+[dependencies]
+nanograph = { path = "../nanograph", version = "1.0.0" }
+arrow-array = { workspace = true }
+arrow-schema = { workspace = true }
+arrow-cast = { workspace = true }
+datafusion-common = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+color-eyre = { workspace = true }
+ariadne = { workspace = true }
+comfy-table = "7"
+
+[dev-dependencies]
+tempfile = { workspace = true }
