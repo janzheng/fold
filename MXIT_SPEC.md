@@ -404,12 +404,35 @@ No numeric priority system (e.g. `#p0`, `#p1`) is part of the spec, though users
 
 ## Archival
 
-Completed tasks MAY be archived when the file grows long:
+`TASKS.md` is working memory — it SHOULD stay short. Completed and obsolete items SHOULD be archived when they accumulate.
 
-- **Option A:** `## Archive` section at the bottom of the same file
-- **Option B:** Separate `TASKS.done.md` file (append-only)
+**Archive files:** `TASKS.done.md` for the fridge list, `TASKS-{area}.done.md` for area files. Always UPPERCASE: `TASKS-UI.done.md`, never `tasks-ui.done.md`.
 
-Archival is user-driven. Runners and agents MUST NOT auto-archive.
+**Alternatively:** a `## Archive` section at the bottom of the same file (simpler but file grows).
+
+Archive files SHOULD be append-only, with newest entries at the top. Resolution brackets and timestamps MUST be preserved when moving items.
+
+**What gets archived:**
+- `[x]` done items and `[~]` obsolete items from TASKS.md and area files
+- NOT shipped phases in TASKS-MAP.md — completed phases with `[shipped DATE]` stay in the map as the shipping record
+- NOT decided/resolved items in TASKS-VISION.md — those are reference, not tasks
+
+**When to suggest archiving:**
+- Runners and agents SHOULD suggest archiving when 5+ completed items accumulate in TASKS.md or 10+ in area files
+- Archival MUST be user-driven — runners and agents MUST NOT auto-archive
+
+> #### Example
+>
+> ```markdown
+> <!-- TASKS.done.md -->
+> # Archived Tasks
+>
+> ## 2026-03-16
+>
+> - [x] [done: extracted to auth/validation.ts] Extract token validation #auth [2026-03-14]
+> - [x] [done: created fixtures] Set up test fixtures for auth module [2026-03-13]
+> - [~] [deferred: moving to Q3] Consider OAuth2 PKCE flow
+> ```
 
 ## Policy File
 
