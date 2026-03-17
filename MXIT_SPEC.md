@@ -473,9 +473,11 @@ For larger projects, the mxit format scales beyond a single `TASKS.md` with opti
 
 `TASKS.md` is always the working surface. The other files are optional — add them only when the project outgrows a single file.
 
+All files MUST use the `TASKS-` prefix. Do NOT create separate `VISION.md`, `MAP.md`, or `ROADMAP.md` files — `TASKS-VISION.md` IS the project's vision document.
+
 ### TASKS-VISION.md
 
-The north star. Uses mxit brackets for goal/decision/risk status.
+The project's only vision/mission/strategy document. Uses mxit brackets for goal/decision/risk status.
 
 Recommended sections:
 
