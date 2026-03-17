@@ -3,7 +3,7 @@
 
 # mxit Specification
 
-**Version 0.3**
+**Version 0.4**
 
 mxit is a markdown-native plain-text format for tasks, checklists, and agent orchestration, based on [xit!](https://xit.jotaen.net/) v1.1.
 
@@ -119,7 +119,7 @@ It MUST be enclosed in square brackets and contain a keyword followed by a colon
 
 The *resolution annotation* MUST appear between the *checkbox* and the *description*.
 
-Recommended keywords: `fixed`, `done`, `wontfix`, `deferred`, `needs`, `blocked`, or any short verb.
+Recommended keywords: `fixed`, `done`, `wontfix`, `deferred`, `needs`, `blocked`, `decided`, `reversed`, `resolved`, or any short verb.
 
 > #### Example
 >
@@ -248,9 +248,12 @@ The following tags have special meaning:
 | `#error="message"` | Error detail from last failure |
 | `#stuck` | Runner gave up after MAX_RETRIES, needs human intervention |
 | `#blocked-by:tag` | Blocked until no open task has that tag |
+| `#needs:tag` | Blocked until the item with that `#tag` is `[x]` (architecture dependencies) |
 | `#discovered` | Task was found during execution of parent task |
 
-Execution state tags are typically written by a runner or agent, not by humans, though humans MAY add or remove them.
+`#needs:tag` and `#blocked-by:tag` have the same blocking semantics but different intent: `#blocked-by` is for task-level blocking within a file, while `#needs` is for architecture-level dependencies (typically in TASKS-MAP.md) where features depend on other features being shipped. Both prevent the item from being **ready**.
+
+Execution state tags are typically written by a runner or agent, not by humans, though humans MAY add or remove them. `#needs` tags are typically written by humans when laying out architecture.
 
 > #### Example
 >
@@ -258,6 +261,7 @@ Execution state tags are typically written by a runner or agent, not by humans, 
 > - [ ] Fix the race condition #error="timeout after 30s"
 > - [!] Critical security patch #error=3 #stuck
 > - [ ] Deploy new endpoint #blocked-by:auth-refactor
+> - [ ] Dashboard #dashboard #needs:search-api #needs:design-system
 > ```
 
 ### Annotations
@@ -348,9 +352,27 @@ When multiple agents work on the same file, an agent claims a task by writing it
 - [ ] Write tests (unclaimed)
 ```
 
-No locking is required for 1-3 agents. For higher concurrency, the runner SHOULD assign tasks (serial dispatch prevents races) or the file SHOULD be split by area.
+No locking is required for 1-3 agents. Claims are advisory ("I'm here"), not locks. For higher concurrency, the runner SHOULD assign tasks (serial dispatch prevents races) or the file SHOULD be split by area.
 
 If two agents race on the same task, last write wins. The loser re-reads the file and picks a different task.
+
+### Agent Nicknames
+
+When fanning out subagents, each MAY pick a memorable `adjective-animal` name for easy identification:
+
+```markdown
+- [@bold-otter] Search API integration #search-api
+- [@calm-fox] Background job queue #bg-jobs
+- [@dry-hawk] CDN setup #cdn
+```
+
+Agent nicknames are **ephemeral** — useful while agents are live, replaced by the resolution bracket when done:
+
+```markdown
+- [x] [done: Typesense integrated, 12 tests] Search API integration #search-api
+```
+
+The agent name disappears because it served its purpose. What matters after completion is what happened, not who did it.
 
 ## Discovery
 
@@ -371,6 +393,7 @@ A task is **ready** (actionable) when ALL of the following are true:
 - Status is `[ ]` or `[!]`
 - AND no children are in `[ ]`, `[@]`, or `[!]` status (subtasks must finish first)
 - AND no `#blocked-by:tag` where that tag exists on an open task
+- AND no `#needs:tag` where that tag exists on a non-`[x]` item
 - AND no `#stuck` tag
 
 ## Priority
@@ -434,6 +457,109 @@ Emitted tasks SHOULD include a `#found` tag and a source tag identifying the too
 > ```
 
 Emitted tasks MUST NOT be auto-dispatched. They wait for human review.
+
+## TASKS Family (Scaling)
+
+For larger projects, the mxit format scales beyond a single `TASKS.md` with optional companion files. All files use the same mxit format — the difference is scope and update frequency.
+
+### File Roles
+
+| File | Purpose | Updates |
+|------|---------|---------|
+| `TASKS.md` | The fridge list — what to work on RIGHT NOW | Daily |
+| `TASKS-VISION.md` | Mission, goals, non-goals, project-level decisions & risks | Rarely (strategy shifts) |
+| `TASKS-MAP.md` | Architecture tree, `#needs` dependencies, phased buildout | On milestones |
+| `TASKS-{area}.md` | Deep backlog for a specific area (e.g. `TASKS-ui.md`) | As needed |
+
+`TASKS.md` is always the working surface. The other files are optional — add them only when the project outgrows a single file.
+
+### TASKS-VISION.md
+
+The north star. Uses mxit brackets for goal/decision/risk status.
+
+Recommended sections:
+
+- **Mission** — one sentence
+- **Goals** — `[x]` shipped, `[@]` in progress, `[ ]` planned, `[?]` undecided
+- **Non-Goals** — `[*]` things explicitly out of scope
+- **Decisions** — project-level calls using resolution brackets: `[x] [decided: Postgres] Database engine — why`
+- **Risks** — `[!]` active risk, `[?]` uncertain, `[x] [resolved: ...]` handled
+
+Decision lifecycle: `[?]` open question → `[x] [decided: choice]` settled → `[~] [reversed: reason]` overturned.
+
+Area-specific decisions and risks belong in the relevant `TASKS-{area}.md` file, not in VISION.
+
+### TASKS-MAP.md
+
+Bird's-eye architecture tree with structured dependencies and phased buildout.
+
+#### Dependencies with `#needs:tag`
+
+Every MAP item MAY have an `#id` tag and `#needs:tag` references:
+
+```markdown
+- [x] Database schema #db-schema
+- [@] API layer #api #needs:db-schema
+- [ ] Dashboard #dashboard #needs:api #needs:design-system
+```
+
+Items with unmet `#needs` are not ready. Items whose `#needs` are all `[x]` can be worked in parallel.
+
+#### Phases
+
+Phases are headings with optional due dates:
+
+```markdown
+## Phase 1: Foundation -> 2026-Q1 [shipped 2026-02-28]
+
+- [x] Database schema #db-schema
+- [x] Auth endpoints #auth-api #needs:db-schema
+
+## Phase 2: Core Product -> 2026-Q2
+
+- [@] Search #search-api #needs:db-schema
+- [ ] Dashboard #dashboard #needs:search-api
+```
+
+When a phase completes, add `[shipped DATE]` to the heading. The `[x]` items become the shipping record.
+
+#### Lanes
+
+For large phases, group parallel workstreams:
+
+```markdown
+## Phase 2: Core Product -> 2026-Q2
+
+### Lane A: Data (ready now)
+
+- [@] Search #search-api #needs:db-schema
+- [@] Background jobs #bg-jobs #needs:db-schema
+
+### Lane B: UI (blocked until Lane A)
+
+- [ ] Dashboard #dashboard #needs:search-api
+
+### Lane C: Infra (independent)
+
+- [ ] CDN setup #cdn
+```
+
+Lanes are organizational headings — the `#needs` tags define the actual dependency graph.
+
+#### Cross-file linking
+
+MAP items MAY link to area files using backtick notation:
+
+```markdown
+- [@] Search — Typesense #search-api `-> TASKS-api.md`
+```
+
+### Rules
+
+1. A task lives in ONE place — don't duplicate across files
+2. `TASKS.md` references area files but doesn't copy tasks from them
+3. `#needs` tags MAY reference items across files (MAP items referenced from area files)
+4. Only create `TASKS-{area}.md` when an area has 5+ tasks
 
 ## Full Example
 
@@ -507,6 +633,7 @@ EXECUTION STATE (tags = what happened to it)
 #error="message"    Error detail
 #stuck              Runner gave up, needs human
 #blocked-by:tag     Blocked until no open task has that tag
+#needs:tag          Blocked until that tag's item is [x] (architecture deps)
 #discovered         Found during execution of parent task
 
 RESOLUTION
@@ -522,7 +649,14 @@ READY (actionable when all true)
   status is [ ] or [!]
   no children in [ ], [@], or [!]
   no #blocked-by:tag where tag exists on open task
+  no #needs:tag where tag exists on non-[x] item
   no #stuck tag
+
+TASKS FAMILY (scaling for larger projects)
+  TASKS.md              the fridge list (daily)
+  TASKS-VISION.md       mission, goals, decisions, risks (rarely)
+  TASKS-MAP.md          architecture + #needs deps + phases (milestones)
+  TASKS-{area}.md       deep backlog per area (as needed)
 
 REGEX
 ^(\s*)- \[([ x~@!?*])\]\s+(.+)$
@@ -543,6 +677,8 @@ REGEX
 | Resolution | not specified | `[keyword: message]` bracket |
 | Multi-agent | not specified | `[@agent-name]` claiming |
 | Discovery | not specified | `#discovered` tag under parent |
+| Dependencies | not specified | `#needs:tag` and `#blocked-by:tag` |
+| File scaling | not specified | TASKS family (VISION, MAP, area files) |
 | Archival | not specified | `## Archive` section or `TASKS.done.md` |
 | Annotations | not specified | HTML comments (`<!-- key: value -->`) |
 | Policy file | not specified | `MXIT.md` |
@@ -559,6 +695,17 @@ REGEX
 - Agent: an AI model or process that executes a task and returns success/failure
 
 ### Changelog
+
+#### Version 0.4
+
+- Add `#needs:tag` for architecture-level dependencies (same blocking semantics as `#blocked-by`)
+- Add TASKS Family scaling: TASKS-VISION.md, TASKS-MAP.md, TASKS-{area}.md companion files
+- Add phased buildout convention with `[shipped DATE]` annotations
+- Add lanes for parallel workstreams within phases
+- Add agent nicknames convention (adjective-animal, ephemeral)
+- Add `decided`, `reversed`, `resolved` as recommended resolution keywords
+- Add cross-file linking with backtick `-> TASKS-{area}.md` notation
+- Claims are explicitly advisory, not locks
 
 #### Version 0.3
 
