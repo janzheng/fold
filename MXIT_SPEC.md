@@ -473,7 +473,9 @@ For larger projects, the mxit format scales beyond a single `TASKS.md` with opti
 
 `TASKS.md` is always the working surface. The other files are optional — add them only when the project outgrows a single file.
 
-All files MUST use the `TASKS-` prefix. Do NOT create separate `VISION.md`, `MAP.md`, or `ROADMAP.md` files — `TASKS-VISION.md` IS the project's vision document.
+All files MUST use the `TASKS-` prefix with UPPERCASE naming: `TASKS-VISION.md`, `TASKS-MAP.md`, `TASKS-SECURITY.md`, never `tasks-security.md` or `Tasks-Vision.md`. This matches the `TASKS.md` convention and makes the family visually distinct from code files. Even if the user says "tasks-security", normalize to `TASKS-SECURITY.md`.
+
+Do NOT create separate `VISION.md`, `MAP.md`, or `ROADMAP.md` files — `TASKS-VISION.md` IS the project's vision document.
 
 ### TASKS-VISION.md
 
