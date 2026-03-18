@@ -342,6 +342,20 @@ A file MAY include a `## References` section linking to other task files or rele
 > - Design doc: `design/auth-redesign.md`
 > ```
 
+## Team Declaration
+
+A project MAY declare available team members — humans and agents — in `TASKS-VISION.md` under a `## Team` section:
+
+```markdown
+## Team
+
+- [*] @yawnxyz — human, product/design, final decisions, external tasks
+- [*] @claude — AI agent, Claude Code, primary dev + planning
+- [*] @codex — AI agent, Codex CLI, parallel coding tasks
+```
+
+The `@name` is what goes in `[@name]` when claiming tasks. Not everyone needs to be listed — add as needed. Human tasks (e.g. "sign up for Stripe API", "talk to legal") SHOULD be assigned to the human team member.
+
 ## Multi-Agent Claiming
 
 When multiple agents work on the same file, an agent claims a task by writing its name in the bracket:
