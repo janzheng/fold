@@ -1,11 +1,17 @@
 ---
 name: fold:mxit
-description: The complete mxit task system — set up TASKS.md, manage the TASKS family (TASKS-VISION.md, TASKS-MAP.md, TASKS-{area}.md), run the task runner, and coordinate multi-agent work. Markdown-native task lists with rich statuses, sub-items, tags, due dates, #needs dependencies, phased buildouts, decisions, risks, and agent coordination. The "track" facet of fold. Use when the user says "tasks", "todos", "mxit", "TASKS.md", "add a task", "mark done", "task list", "what's left to do", "set up tasks", "run tasks", "what's ready", "project map", "architecture map", "what blocks what", "dependencies", "vision", "decisions", "fold:mxit", or wants to track work items in a project.
+description: The complete mxit task system — set up TASKS.md, manage the TASKS family (TASKS-DESIGN.md, TASKS-MAP.md, TASKS-{area}.md), run the task runner, and coordinate multi-agent work. Markdown-native task lists with rich statuses, sub-items, tags, due dates, #needs dependencies, phased buildouts, decisions, risks, and agent coordination. The "track" facet of fold. Use when the user says "tasks", "todos", "mxit", "TASKS.md", "add a task", "mark done", "task list", "what's left to do", "set up tasks", "run tasks", "what's ready", "project map", "architecture map", "roadmap", "what blocks what", "dependencies", "vision", "decisions", "archive tasks", "clean up tasks", "garbage collect", "fold:mxit", or wants to track work items in a project.
 ---
 
 # fold:mxit — Task Tracking & Orchestration
 
 The **track** facet of fold. Set up and manage `TASKS.md` files, scale to the full TASKS family for bigger projects, and run the task lifecycle with multi-agent coordination.
+
+> **Canonical repos:** This skill is the implementation layer. The canonical spec and parser live elsewhere:
+> - **Spec:** `/Users/janzheng/Desktop/Projects/_deno/apps/mxit/MXIT_SPEC.md`
+> - **Parser/CLI:** `/Users/janzheng/Desktop/Projects/_deno/apps/mxit/src/`
+> - **fold (parent):** `/Users/janzheng/Desktop/Projects/_deno/apps/fold/`
+> - **Skills (this repo):** `/Users/janzheng/Desktop/Projects/mcp-hub/skills/`
 
 ## Quick Setup
 
@@ -22,12 +28,13 @@ Create a `TASKS.md` in the project root:
   - [ ] Sub-task B
 ```
 
-For bigger projects (3+ areas), also suggest TASKS-MAP.md and TASKS-VISION.md — see **Scaling Up** below.
+For bigger projects (3+ areas), also suggest TASKS-MAP.md and TASKS-DESIGN.md — see **Scaling Up** below.
 
 ## Pairs with
 
 - `/fold:playtest` — discoveries get emitted as mxit tasks with `#found`
 - `/fold:autorefine` — too-big issues get emitted as mxit tasks with `#found #autorefine`
+- `/fold:mxit:brainstorm` — speculative exploration (EXPLORE files) feeds into TASKS when committed
 - `/fold` — the full loop: discover → track → improve → fold again
 
 ---
@@ -143,11 +150,23 @@ Discovered tasks are NOT auto-dispatched. They wait for human review.
 
 ### Archival
 
-Completed tasks can be archived when the file gets long:
-- **Option A:** `## Archive` section at bottom of same file
-- **Option B:** Separate `TASKS.done.md` file
+TASKS.md is RAM — it should stay short. When `[x]` items pile up, they need garbage collection.
 
-User decides when to archive. Don't auto-archive.
+**How to archive:**
+- Move completed `[x]` and obsolete `[~]` items to `TASKS.done.md` (or `TASKS-{area}.done.md` for area files)
+- Keep the `.done.md` file append-only — newest at the top, grouped by date or sprint
+- Alternatively, use a `## Archive` section at the bottom of the same file (simpler but file grows)
+
+**When to suggest archiving:**
+- TASKS.md has 5+ completed items → suggest moving to TASKS.done.md
+- An area file has 10+ completed items → suggest moving to its .done.md
+- A phase in TASKS-MAP.md is fully `[shipped]` → it stays in MAP (that IS the archive)
+- Decisions/risks in TASKS-DESIGN.md that are `[x] [decided]` or `[x] [resolved]` → stay (they're reference)
+
+**Rules:**
+- Never auto-archive — always ask the user first
+- Preserve resolution brackets and timestamps when moving to .done.md
+- The .done.md file is read-only history — don't edit old entries
 
 ### How to Write/Update TASKS.md
 
@@ -175,6 +194,7 @@ Change only the checkbox. Do NOT rewrite surrounding text:
 
 #### Behavior
 
+- **CRITICAL: Update TASKS.md after completing work.** After building, testing, or finishing any task, immediately mark it done in TASKS.md (or the relevant TASKS-{area}.md). Don't wait — do it as part of the same workflow. This is the #1 thing that gets forgotten.
 - Preserve existing formatting, tags, and due dates when editing
 - Don't reorder items unless explicitly asked
 - Don't remove `[~]` obsolete items unless asked — they serve as history
@@ -216,29 +236,58 @@ Change only the checkbox. Do NOT rewrite surrounding text:
 
 ## Scaling Up: The TASKS Family
 
+> **Progressive disclosure:** For small projects, ONLY read the Format Reference and Quick Setup above. Stop here. Everything below is for projects with 3+ areas, multiple phases, or multi-agent coordination. Don't add structure until the project needs it.
+
 For larger projects, TASKS.md alone gets overwhelmed. The mxit format scales with three optional companion files. Add them only when the project outgrows a single file.
 
 ### The layers
 
 ```
-TASKS-VISION.md     — why: mission, goals, north star (optional)
+TASKS-DESIGN.md     — why + how: mission, design, goals, decisions
 TASKS-MAP.md        — what: architecture tree + phased buildout
+TICKET/{name}.md    — delegation: scope, contracts, acceptance for a work chunk
+REDUCE/{name}.md    — investigation: research boiled down to a recommendation
 TASKS-{area}.md     — deep backlog per area (e.g. TASKS-ui.md)
 TASKS.md            — now: the fridge list, what you're doing today
 ```
 
 **TASKS.md** is always the fridge — short, curated, changes daily. The others add context for bigger projects.
 
-### TASKS-VISION.md — Mission, Goals, Decisions & Risks
+**IMPORTANT:** All files use the `TASKS-` prefix with UPPERCASE naming: `TASKS-DESIGN.md`, `TASKS-MAP.md`, `TASKS-SECURITY.md`. Never lowercase (`tasks-security.md`). Even if the user says "tasks-security", normalize to `TASKS-SECURITY.md`. Do NOT create separate `VISION.md`, `DESIGN.md`, `MAP.md`, or `ROADMAP.md` files — everything lives in the TASKS family. `TASKS-DESIGN.md` IS the design doc. There is no separate vision or design document.
 
-Single doc. The north star plus the reasoning behind it. Answers "why are we building this?", "what calls have we made?", and "what could go wrong?"
+### TASKS-DESIGN.md — The 5 W's + How
+
+The project's design document. Covers who, what, when, where, why, AND how. Do NOT create a separate `VISION.md` or `DESIGN.md` — this is it. The "read this first" doc for anyone (human or agent) joining the project.
 
 ```markdown
-# ProjectName — Vision
+# ProjectName — Design
 
 ## Mission
 
 One sentence. What this project exists to do.
+
+## Who
+
+Who is this for? 1-2 user types with their core need.
+
+- [*] Data scientists — need to run experiments without DevOps overhead
+- [*] Platform engineers — need to manage compute resources across teams
+
+## What
+
+What does it do? 2-3 sentences, plain language. Not features — outcomes.
+
+## Why
+
+Why does this exist? What problem triggered it? What's the alternative without it?
+
+## How It Works
+
+High-level system design. How the pieces fit together. A newcomer should read this and understand the architecture without reading code.
+
+Keep it short — a few paragraphs, maybe a simple diagram. Not exhaustive (that's what the code is for). Just enough to orient someone: "data flows from X through Y to Z, the key abstraction is W."
+
+Update this when the architecture changes meaningfully, not on every commit.
 
 ## Goals
 
@@ -247,15 +296,20 @@ One sentence. What this project exists to do.
 - [ ] Goal 3 — planned
 - [?] Goal 4 — still deciding if we need this
 
+## Team
+
+Declare who's available — humans and agents. Use these names in `[@name]` claims.
+
+- [*] @yawnxyz — human, product/design, final decisions, external tasks
+- [*] @claude — AI agent, Claude Code, primary dev + planning
+- [*] @codex — AI agent, Codex CLI, parallel coding tasks
+
+Not everyone needs to be listed. Add as needed. The `@name` is what goes in `[@name]` when claiming tasks.
+
 ## Non-Goals
 
 - [*] Thing we explicitly won't do — and why
 - [*] Another boundary
-
-## Success Metrics
-
-- [*] Metric A: target value
-- [*] Metric B: target value
 
 ## Decisions
 
@@ -263,9 +317,8 @@ Project-level calls. The resolution bracket captures the decision; the text afte
 
 - [x] [decided: Postgres] Database engine — Mongo was considered but we need ACID transactions
 - [x] [decided: JWT + refresh] Auth strategy — sessions too stateful for API-first architecture
-- [x] [decided: Stripe] Payment provider — evaluated Paddle but need marketplace payouts
 - [?] Search engine — Elastic vs Typesense, waiting on load test results
-- [~] [reversed: back to REST] GraphQL API — added complexity wasn't worth it for our use case
+- [~] [reversed: back to REST] GraphQL API — added complexity wasn't worth it
 
 Lifecycle: `[?]` open question → `[x] [decided: choice]` settled → `[~] [reversed: reason]` if overturned.
 
@@ -279,11 +332,13 @@ Project-level blockers and uncertainties. Not tasks — constraints that affect 
 - [x] [resolved: signed 2026-02-15] SOC2 compliance — was blocking enterprise sales
 ```
 
-Uses mxit brackets for goal/decision/risk status. Updates rarely — when strategy shifts, decisions are made, or risks change. Area-specific decisions belong in the relevant TASKS-{area}.md file instead.
+All sections are optional — use what fits. Small projects might just have Mission + How It Works + Goals. The full template is for projects where newcomers need real onboarding.
+
+Updates rarely — when strategy shifts, architecture changes, decisions are made, or risks change. Area-specific decisions belong in the relevant TASKS-{area}.md file instead.
 
 #### Decisions and Risks in area files
 
-Area-level calls and risks live in the area file, not in VISION:
+Area-level calls and risks live in the area file, not in DESIGN:
 
 ```markdown
 # UI Tasks
@@ -474,32 +529,191 @@ Standard mxit format. Same rules as TASKS.md. Scoped to one area:
 
 Only create area files when an area has enough active work (5+ tasks). Small areas stay inline in TASKS-MAP.md.
 
+### REDUCE — Deep Dive Documents
+
+When a task is too complex to just implement, someone needs to investigate first — spike on an architecture, debug a gnarly issue, research approaches, sketch a design. The result is a **REDUCE doc**: the investigation boiled down to a concentrated recommendation.
+
+REDUCE docs are the bridge between "we need to figure this out" and "go do the thing." They capture the thinking so it survives the conversation and any agent picking up the task gets full context.
+
+#### Where they live
+
+```
+REDUCE/                         — folder for projects with multiple deep dives
+REDUCE/unified-retrieval.md     — one doc per investigation
+REDUCE/auth-race-condition.md
+```
+
+For small projects, `REDUCE-{name}.md` alongside TASKS files works too.
+
+#### Shape
+
+```markdown
+# Unified Retrieval Layer
+
+**Status:** ready | wip | abandoned
+**From:** conversation / playtest / debugging / spike
+**Task:** `-> TASKS.md` (link to the task that will implement this)
+
+## Problem
+
+What prompted the investigation. 2-3 sentences max.
+
+## Investigation
+
+What you found. The deep dive content — research, analysis, prototyping results, alternate approaches considered. This is the bulk of the doc.
+
+## Recommendation
+
+The concluded design, fix, or approach. Clear enough that someone who wasn't in the original conversation can understand and implement it.
+
+## Implementation Sketch
+
+Enough detail that an agent can execute without the original conversation context. Interface sketches, migration steps, key files to change, edge cases to handle.
+```
+
+#### How tasks link to REDUCE docs
+
+```markdown
+- [ ] Unified retrieval layer `-> REDUCE/unified-retrieval.md` #arch
+- [ ] Fix auth race condition `-> REDUCE/auth-race-condition.md` #bug
+```
+
+The task is thin — the REDUCE doc has all the context. The agent reads the doc, then implements.
+
+#### Status lifecycle
+
+- **wip** — investigation ongoing, not ready to implement
+- **ready** — recommendation is clear, task can be picked up
+- **abandoned** — investigation concluded that the approach won't work (keep for future reference)
+
+When the linked task is completed, the REDUCE doc stays as documentation of the decision. Archive it with the task if needed.
+
+#### When to write a REDUCE doc
+
+- Architecture changes that need a design sketch first
+- Bugs that require investigation before fixing
+- Features where multiple approaches were evaluated
+- Any time an agent or human does significant thinking that a future agent would need
+
+#### When NOT to write one
+
+- Simple tasks where the implementation is obvious
+- Tasks where the TASKS description is sufficient context
+- Quick fixes that don't need a design phase
+
+#### REDUCE vs EXPLORE
+
+| | EXPLORE | REDUCE |
+|---|---------|--------|
+| **Phase** | Before commitment | After investigation |
+| **Content** | Multiple paths, open questions | One recommendation, concluded |
+| **Promotes to** | TASKS-DESIGN (strategy) | TASKS (actionable work) |
+| **Tone** | "Should we...?" | "Here's how, go build it" |
+| **Metaphor** | Sketchbook | Reduced sauce — concentrated essence |
+
+Both are upstream of TASKS, but EXPLORE is speculative and REDUCE is conclusive. An EXPLORE exercise might identify that you need a REDUCE spike on a specific topic.
+
+### TICKET — Delegation Slips
+
+When you're handing a big chunk of work to a subagent (or a new team member, or future-you after a break), a ticket is the order slip — like a kitchen ticket that tells the line cook what to make, what it goes with, and any special notes.
+
+Tickets answer: "what do you own, what can't you break, and how do we know it's done?"
+
+#### Where they live
+
+```
+TICKET/                     — folder for projects with multiple
+TICKET/auth-rewrite.md      — one per major work chunk
+TICKET/phase-2.md
+```
+
+Or `TICKET-{name}.md` alongside TASKS files. Always UPPERCASE.
+
+#### Shape
+
+```markdown
+# Auth Rewrite — Ticket
+
+**Scope:** Own the auth module rewrite. Don't touch billing or the session store — that's Phase 3.
+**Builds on:** `src/core/auth.ts`, `src/core/types.ts`. Tests use existing harness in `src/tests/`.
+**Contracts:** `refreshToken()` signature — billing depends on it. `User` type — 4 other modules import it. Change these = break downstream.
+**Done when:** All existing auth tests pass + 10 new tests. Token refresh works under concurrent access. No regression in login flow.
+
+## Deviations
+
+> Filled after work ships. What changed and why.
+```
+
+Four fields + a post-hoc section. That's it.
+
+- **Scope** — what you own, what you don't. "You may be tempted to also do X — don't."
+- **Builds on** — key files, prior art, assumptions. What exists that you can rely on.
+- **Contracts** — interfaces other phases/agents depend on. Break these = break downstream.
+- **Done when** — concrete acceptance criteria. No judgment calls.
+- **Deviations** — filled AFTER work ships. What changed from the ticket and why. This is the institutional memory.
+
+#### How tasks link to tickets
+
+```markdown
+- [ ] Auth rewrite `-> TICKET/auth-rewrite.md` #auth #phase-2
+```
+
+#### When to write a ticket
+
+- Delegating 10+ tasks to a subagent across multiple areas
+- Work has interface boundaries other phases depend on
+- Multiple agents working on the same phase in parallel
+- Coming back to a project after a long break
+
+#### When NOT to write one
+
+- Small feature, one agent, obvious scope — just use TASKS.md
+- Everything fits in TASKS-MAP sub-items
+- No interface contracts to protect
+
+#### TICKET vs REDUCE
+
+| | REDUCE | TICKET |
+|---|--------|--------|
+| **Job** | Investigation → recommendation | Delegation → safe execution |
+| **Answers** | "What should we build and why?" | "How do you build it without breaking everything else?" |
+| **Written** | After research/spike concludes | Before delegating a work chunk |
+| **Core content** | Problem, investigation, recommendation | Scope, contracts, acceptance criteria |
+| **Post-hoc** | — | Deviations section |
+
+A REDUCE might feed into a TICKET. The REDUCE figures out the approach, the TICKET packages the delegation context. But either can exist without the other.
+
 ### Rules for the family
 
-1. **TASKS-VISION.md** = source of truth for **why** — mission, goals, non-goals, project-level decisions & risks
+1. **TASKS-DESIGN.md** = source of truth for **why + how** — mission, system design, goals, decisions & risks
 2. **TASKS-MAP.md** = source of truth for **structure + dependencies + shipping** — what exists, what blocks what, what can fan out
-3. **TASKS-{area}.md** = source of truth for **depth** — all tasks in an area, plus area-level decisions & risks
-4. **TASKS.md** = source of truth for **priority** — what to work on RIGHT NOW
-5. **Don't duplicate** — a task lives in ONE place. TASKS.md references area files, doesn't copy them
-6. **Dependencies are explicit** — use `#needs:tag` in TASKS-MAP so blocking relationships are visible, not buried in prose
-7. **Decisions live where they have context** — project-level in VISION, area-level in area files
-8. **Completed phases are the changelog** — `[shipped DATE]` on the heading, `[x]` items are the record
-9. **Vision updates rarely** — strategy shifts, decisions made, risks changed
-10. **Map updates on milestones** — features ship, new areas appear, phases complete
-11. **Area files are backlogs** — comprehensive, not urgent
-12. **TASKS.md updates daily** — the working surface
+3. **TICKET/{name}.md** = source of truth for **delegation** — scope, contracts, acceptance criteria for a major work chunk
+4. **TASKS-{area}.md** = source of truth for **depth** — all tasks in an area, plus area-level decisions & risks
+5. **TASKS.md** = source of truth for **priority** — what to work on RIGHT NOW
+6. **Don't duplicate** — a task lives in ONE place. TASKS.md uses soft references to other files (e.g. "See TASKS-api.md for search details"), not copies. Like legal citations — "as described in Section 4.2"
+7. **Dependencies are explicit** — use `#needs:tag` in TASKS-MAP so blocking relationships are visible, not buried in prose
+8. **Decisions live where they have context** — project-level in DESIGN, area-level in area files
+9. **"How It Works" stays high-level** — DESIGN explains architecture, code explains implementation
+10. **Completed phases are the changelog** — `[shipped DATE]` on the heading, `[x]` items are the record
+11. **Design updates rarely** — strategy shifts, architecture changes, decisions made, risks changed
+12. **Map updates on milestones** — features ship, new areas appear, phases complete
+13. **Tickets are written once, deviated post-hoc** — the deviations section is the value
+14. **Area files are backlogs** — comprehensive, not urgent
+15. **TASKS.md updates daily** — the working surface
 
 ### When to scale up
 
 | Signal | Add |
 |--------|-----|
-| Project has a clear mission worth writing down | TASKS-VISION.md |
+| Project has a mission or design worth writing down | TASKS-DESIGN.md |
 | 3+ distinct areas (UI, API, infra, data) | TASKS-MAP.md |
 | An area has 5+ tasks | TASKS-{area}.md |
 | Multiple phases or milestones planned | Phases in TASKS-MAP.md |
 | Can't tell what blocks what | `#needs:tag` dependencies in TASKS-MAP.md |
 | Multiple agents/people need to fan out | Lanes in TASKS-MAP.md |
 | TASKS.md is mixing concerns | Split into area files |
+| A task needs investigation before implementing | REDUCE/{name}.md |
+| Delegating a big chunk with interface contracts | TICKET/{name}.md |
 
 ### When NOT to scale
 
@@ -581,7 +795,7 @@ mxit fail TASKS.md <line> --error "timeout after 30s"
 
 The runner operates on **TASKS.md** and **TASKS-{area}.md** files. These contain actionable work.
 
-**TASKS-MAP.md** and **TASKS-VISION.md** are NOT run — they're slower-moving documents that humans update. However, `#needs:tag` references in task files can point to MAP items, so the runner resolves those tags across all TASKS files when computing readiness.
+**TASKS-MAP.md** and **TASKS-DESIGN.md** are NOT run — they're slower-moving documents that humans update. However, `#needs:tag` references in task files can point to MAP items, so the runner resolves those tags across all TASKS files when computing readiness.
 
 ### Full Automation Loop
 
