@@ -76,6 +76,20 @@ Machine-readable state — separate from human-meaningful status:
 
 A task can be `[!]` important AND `#error` at the same time.
 
+### Optional Convention Tags
+
+Lightweight conventions — no enforcement, just agreed-upon tag names that agents and humans recognize. Use any that fit your project, ignore the rest.
+
+- `#goal:name` — links a task to a goal defined in TASKS-DESIGN.md. The lightweight "why chain" — an agent reading the task can check what goal it serves.
+- `#needs-approval` — task is blocked until a human explicitly approves it. Human changes status to `[x] [approved: reason]` or `[~] [rejected: reason]`. Use for anything with real-world consequences (deploys, public announcements, irreversible changes).
+- `[heartbeat: ISO-timestamp]` — agent writes this when it starts working on a task. Next agent checks freshness — if the timestamp is stale (e.g., >30min old), the previous agent likely crashed. Lightweight liveness detection without a server.
+
+```markdown
+- [ ] Deploy to production #goal:launch #needs-approval
+- [@claude] Refactor auth module #goal:security [heartbeat: 2026-03-19T14:32Z]
+- [x] [approved: reviewed, looks good] Migrate user data #goal:launch
+```
+
 ### Resolution Format
 
 When completing or closing a task, add a bracket annotation after status:
