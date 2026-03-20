@@ -26,6 +26,10 @@ Create a `TASKS.md` in the project root:
 - [ ] Second task #tag -> 2026-03-31
   - [ ] Sub-task A
   - [ ] Sub-task B
+
+## Later
+
+- [ ] Ideas, future work, things to revisit
 ```
 
 For bigger projects (3+ areas), also suggest TASKS-MAP.md and TASKS-DESIGN.md — see **Scaling Up** below.
@@ -220,10 +224,10 @@ Change only the checkbox. Do NOT rewrite surrounding text:
 
 - [ ] Rate limiter doesn't account for refresh token requests #discovered
 
-## Post-Refactor
+## Later
 
 - [ ] Update API docs for new token endpoints #docs
-- [~] [deferred: moving to Q3] Consider OAuth2 PKCE flow
+- [ ] Consider OAuth2 PKCE flow
 - [*] Remember to check Redis config before deploy
 
 ## Archive
@@ -245,8 +249,8 @@ For larger projects, TASKS.md alone gets overwhelmed. The mxit format scales wit
 ```
 TASKS-DESIGN.md     — why + how: mission, design, goals, decisions
 TASKS-MAP.md        — what: architecture tree + phased buildout
-TICKET/{name}.md    — delegation: scope, contracts, acceptance for a work chunk
-REDUCE/{name}.md    — investigation: research boiled down to a recommendation
+.ticket/{name}.md    — delegation: scope, contracts, acceptance for a work chunk
+.reduce/{name}.md    — investigation: research boiled down to a recommendation
 TASKS-{area}.md     — deep backlog per area (e.g. TASKS-ui.md)
 TASKS.md            — now: the fridge list, what you're doing today
 ```
@@ -538,12 +542,12 @@ REDUCE docs are the bridge between "we need to figure this out" and "go do the t
 #### Where they live
 
 ```
-REDUCE/                         — folder for projects with multiple deep dives
-REDUCE/unified-retrieval.md     — one doc per investigation
-REDUCE/auth-race-condition.md
+.reduce/                         — folder for projects with multiple deep dives
+.reduce/unified-retrieval.md     — one doc per investigation
+.reduce/auth-race-condition.md
 ```
 
-For small projects, `REDUCE-{name}.md` alongside TASKS files works too.
+Always use the dotfolder — keeps project root clean.
 
 #### Shape
 
@@ -574,8 +578,8 @@ Enough detail that an agent can execute without the original conversation contex
 #### How tasks link to REDUCE docs
 
 ```markdown
-- [ ] Unified retrieval layer `-> REDUCE/unified-retrieval.md` #arch
-- [ ] Fix auth race condition `-> REDUCE/auth-race-condition.md` #bug
+- [ ] Unified retrieval layer `-> .reduce/unified-retrieval.md` #arch
+- [ ] Fix auth race condition `-> .reduce/auth-race-condition.md` #bug
 ```
 
 The task is thin — the REDUCE doc has all the context. The agent reads the doc, then implements.
@@ -622,12 +626,12 @@ Tickets answer: "what do you own, what can't you break, and how do we know it's 
 #### Where they live
 
 ```
-TICKET/                     — folder for projects with multiple
-TICKET/auth-rewrite.md      — one per major work chunk
-TICKET/phase-2.md
+.ticket/                     — folder for projects with multiple
+.ticket/auth-rewrite.md      — one per major work chunk
+.ticket/phase-2.md
 ```
 
-Or `TICKET-{name}.md` alongside TASKS files. Always UPPERCASE.
+Always use the dotfolder — keeps project root clean.
 
 #### Shape
 
@@ -655,7 +659,7 @@ Four fields + a post-hoc section. That's it.
 #### How tasks link to tickets
 
 ```markdown
-- [ ] Auth rewrite `-> TICKET/auth-rewrite.md` #auth #phase-2
+- [ ] Auth rewrite `-> .ticket/auth-rewrite.md` #auth #phase-2
 ```
 
 #### When to write a ticket
@@ -687,7 +691,7 @@ A REDUCE might feed into a TICKET. The REDUCE figures out the approach, the TICK
 
 1. **TASKS-DESIGN.md** = source of truth for **why + how** — mission, system design, goals, decisions & risks
 2. **TASKS-MAP.md** = source of truth for **structure + dependencies + shipping** — what exists, what blocks what, what can fan out
-3. **TICKET/{name}.md** = source of truth for **delegation** — scope, contracts, acceptance criteria for a major work chunk
+3. **.ticket/{name}.md** = source of truth for **delegation** — scope, contracts, acceptance criteria for a major work chunk
 4. **TASKS-{area}.md** = source of truth for **depth** — all tasks in an area, plus area-level decisions & risks
 5. **TASKS.md** = source of truth for **priority** — what to work on RIGHT NOW
 6. **Don't duplicate** — a task lives in ONE place. TASKS.md uses soft references to other files (e.g. "See TASKS-api.md for search details"), not copies. Like legal citations — "as described in Section 4.2"
@@ -712,8 +716,8 @@ A REDUCE might feed into a TICKET. The REDUCE figures out the approach, the TICK
 | Can't tell what blocks what | `#needs:tag` dependencies in TASKS-MAP.md |
 | Multiple agents/people need to fan out | Lanes in TASKS-MAP.md |
 | TASKS.md is mixing concerns | Split into area files |
-| A task needs investigation before implementing | REDUCE/{name}.md |
-| Delegating a big chunk with interface contracts | TICKET/{name}.md |
+| A task needs investigation before implementing | .reduce/{name}.md |
+| Delegating a big chunk with interface contracts | .ticket/{name}.md |
 
 ### When NOT to scale
 

@@ -19,12 +19,12 @@ Take messy inputs — tweets, research notes, conversation threads, debugging se
 ### Where it lives
 
 ```
-REDUCE/                         — folder (for projects with multiple)
-REDUCE/unified-retrieval.md     — one doc per topic
-REDUCE/auth-race-condition.md
+.reduce/                         — folder (for projects with multiple)
+.reduce/unified-retrieval.md     — one doc per topic
+.reduce/auth-race-condition.md
 ```
 
-Or `REDUCE-{name}.md` alongside TASKS files for smaller projects. Always UPPERCASE.
+Always use the dotfolder — keeps project root clean.
 
 ### Shape
 
@@ -65,7 +65,7 @@ Enough detail for an agent to execute: interface sketches, migration steps, key 
 ## Link from TASKS
 
 ```markdown
-- [ ] Unified retrieval layer `-> REDUCE/unified-retrieval.md` #arch
+- [ ] Unified retrieval layer `-> .reduce/unified-retrieval.md` #arch
 ```
 
 The task is thin — the REDUCE doc has all the context.
@@ -75,7 +75,7 @@ The task is thin — the REDUCE doc has all the context.
 1. **Gather inputs** — user provides tweets, notes, links, or says "reduce what we just discussed"
 2. **Read and synthesize** — find the signal in the noise
 3. **Write the REDUCE doc** — problem, investigation, recommendation
-4. **Optionally create a task** — link it to the doc with `-> REDUCE/...`
+4. **Optionally create a task** — link it to the doc with `-> .reduce/...`
 5. **Done** — the thinking survives the conversation
 
 ## REDUCE vs EXPLORE
