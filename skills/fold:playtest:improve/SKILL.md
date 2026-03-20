@@ -1,6 +1,6 @@
 ---
-name: playtest:improve
-description: Run the analyze-then-fix pipeline — one agent produces findings as a checklist, another works through fixing them. Self-improvement through playtesting. Use when the user says "analyze and fix", "self-improve", "review and fix", "dogfood this", "find issues and fix them", or wants the analyze→fix pipeline.
+name: fold:playtest:improve
+description: Run the analyze-then-fix pipeline — the "discover" facet of fold. One — one agent produces findings as a checklist, another works through fixing them. Self-improvement through playtesting. Use when the user says "analyze and fix", "self-improve", "review and fix", "dogfood this", "find issues and fix them", or wants the analyze→fix pipeline.
 ---
 
 # Analyze → Fix Pipeline

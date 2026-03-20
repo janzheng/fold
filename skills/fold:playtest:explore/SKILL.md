@@ -1,6 +1,6 @@
 ---
-name: playtest:explore
-description: Run exploratory agentic playtests — open-ended investigation with no script. Fresh eyes, adversarial probing, ergonomics review, discovery of unknown unknowns. Use when the user says "explore this", "try to break it", "fresh eyes", "what's wrong with this", "use it and tell me what's awkward", or wants open-ended system feedback.
+name: fold:playtest:explore
+description: Run exploratory agentic playtests — the "discover" facet of fold. Open-ended — open-ended investigation with no script. Fresh eyes, adversarial probing, ergonomics review, discovery of unknown unknowns. Use when the user says "explore this", "try to break it", "fresh eyes", "what's wrong with this", "use it and tell me what's awkward", or wants open-ended system feedback.
 ---
 
 # Exploratory Playtesting

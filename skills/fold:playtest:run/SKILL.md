@@ -1,6 +1,6 @@
 ---
-name: playtest:run
-description: Execute directed agentic playtests — read the playtest file, operate the system as a user would, make judgment calls, mark results, track duration. Use when the user says "run playtest", "run the smoke test", "execute playtest", or points you at a playtest .md file to execute.
+name: fold:playtest:run
+description: Execute directed agentic playtests — the "discover" facet of fold. Read — read the playtest file, operate the system as a user would, make judgment calls, mark results, track duration. Use when the user says "run playtest", "run the smoke test", "execute playtest", or points you at a playtest .md file to execute.
 ---
 
 # Execute Directed Playtests
