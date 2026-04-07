@@ -14,7 +14,9 @@ Pass 1 (Analyze): Read-only review → produce findings as - [ ] checklist
      ↓
 Human review: Approve/reject/edit findings before fix pass
      ↓
-Pass 2 (Fix): Work through checklist → fix each item → mark [x]
+Synthesize: Turn approved findings into specific fix specs
+     ↓
+Pass 2 (Fix): Work through SPECS, not raw checklist → fix each item → mark [x]
      ↓
 Verify: Re-run relevant playtests to confirm fixes work
 ```
@@ -83,9 +85,38 @@ playtests/
 
 The human can also add findings the agent missed. The checklist is collaborative.
 
+## Synthesize: Raw Findings → Fix Specs
+
+**After the human approves findings and before the fix pass**, read the approved checklist and turn each finding into a specific fix spec. This is the critical bridge — the raw checklist says WHAT's wrong, the spec says HOW to fix it.
+
+For each approved finding, write:
+
+```markdown
+### Finding: No request validation on POST /users
+**File:** src/routes/users.ts:87
+**Current behavior:** POST handler accepts any shape, no validation
+**Fix:** Add zod schema validation at handler entry:
+  - Define `CreateUserSchema = z.object({ email: z.string().email(), name: z.string().min(1) })`
+  - Parse request body with `CreateUserSchema.parse(body)` before processing
+  - Return 400 with validation errors on failure
+**Test:** POST with missing email → expect 400 with `{error: "email is required"}`
+```
+
+**NOT:** "Fix POST /users error handling" — that's too vague. The fixer would have to re-understand the problem.
+
+### Continue vs spawn for the fix pass
+
+After synthesis, decide per finding:
+
+| Situation | Do | Why |
+|-----------|-----|-----|
+| Analyzer already loaded the target files | Continue (SendMessage) | Context reuse |
+| Fix is in a different area than analysis | Spawn fresh (Agent) | Avoid context noise |
+| Multiple independent fixes | Fan out fresh agents | Parallelism |
+
 ## Pass 2: Fix
 
-Work through the approved findings checklist. For each `- [ ]` item:
+Work through the **synthesized fix specs** (not the raw checklist). For each spec:
 
 1. Read the finding
 2. Implement the fix

@@ -3,7 +3,7 @@
 
 # mxit Specification
 
-**Version 0.4**
+**Version 0.5**
 
 mxit is a markdown-native plain-text format for tasks, checklists, and agent orchestration, based on [xit!](https://xit.jotaen.net/) v1.1.
 

@@ -3,7 +3,7 @@
 
 # mxit Specification
 
-**Version 0.5**
+**Version 1.0**
 
 mxit is a markdown-native plain-text format for tasks, checklists, and agent orchestration, based on [xit!](https://xit.jotaen.net/) v1.1.
 
@@ -235,6 +235,25 @@ The *tag name* MAY use a colon (`:`) as a separator for namespaced tags (e.g. `#
 > - [ ] Blocked #blocked-by:auth-refactor
 > ```
 
+#### Tag Separator Guidance
+
+The colon separator `:` is RECOMMENDED for semantic relationships: `#blocked-by:auth`, `#needs:api`, `#spec:auth/session`.
+
+The equals separator `=` is RECOMMENDED for data values: `#error=3`, `#tid=a1b2c3d4`, `#priority=1`.
+
+#### Spec Linkage
+
+The `#spec:path/requirement` convention links a task to a spec requirement.
+
+The value after `spec:` is an opaque path meaningful to the project's spec system. Parsers SHOULD treat it as any other namespaced tag.
+
+> #### Example
+>
+> ```markdown
+> - [ ] Implement token rotation #spec:auth/token-rotation
+> - [ ] Add rate limiting #spec:api/rate-limits
+> ```
+
 ### Execution State Tags
 
 Execution state — error, retry, blocked, stuck — is expressed via *tags*, not status brackets. This allows a task to be both `[!]` important AND `#error` at the same time.
@@ -264,6 +283,27 @@ Execution state tags are typically written by a runner or agent, not by humans, 
 > - [ ] Dashboard #dashboard #needs:search-api #needs:design-system
 > ```
 
+### Execution Tags
+
+The format defines the following as recognized execution tags. What happens when they are present is application-specific.
+
+| Tag | Meaning |
+|-----|---------|
+| `#run` | Execute this task |
+| `#run=command-name` | Run a registered command by name |
+| `#exec=executor-type` | Route to a specific executor |
+| `#rerun` | Always executable regardless of task status |
+
+`#run` and `#exec` are typically consumed by a runner to determine how to dispatch a task. `#rerun` overrides normal "already done" checks — a task marked `[x]` with `#rerun` SHOULD be re-executed when the runner encounters it.
+
+> #### Example
+>
+> ```markdown
+> - [ ] Run database migrations #run=migrate
+> - [ ] Deploy to staging #exec=deploy-agent
+> - [x] Refresh search index #rerun
+> ```
+
 ### Annotations
 
 *Annotations* are HTML comments that appear on indented lines immediately after an *item*. They provide metadata for runners and agents.
@@ -287,6 +327,25 @@ Recognized annotation keys:
 >   <!-- accept: all edge cases handled -->
 >   <!-- timeout: 5m -->
 >   <!-- budget: $0.50 -->
+> ```
+
+### Task ID
+
+A *task ID* is a stable identifier for an *item* that persists across editing.
+
+It MUST be expressed as a tag with the name `tid` and an opaque string value (typically an 8-character hex string): `#tid=xxxx`.
+
+Task IDs MUST be stable across editing — line numbers change when users edit above a task, but the `tid` persists and uniquely identifies the task.
+
+Task IDs are typically assigned by runners or executors, not humans. A runner SHOULD auto-assign a `tid` to any task it touches that lacks one.
+
+Parsers SHOULD extract the `tid` value into a dedicated field on the Task object.
+
+> #### Example
+>
+> ```markdown
+> - [ ] Fix the auth bug #tid=a1b2c3d4
+> - [@claude-1] Refactor token logic #auth #tid=f9e8d7c6
 > ```
 
 ### Group
@@ -676,6 +735,20 @@ EXECUTION STATE (tags = what happened to it)
 #blocked-by:tag     Blocked until no open task has that tag
 #needs:tag          Blocked until that tag's item is [x] (architecture deps)
 #discovered         Found during execution of parent task
+#tid=xxxx           Stable task ID (8-char hex, assigned by runner)
+
+EXECUTION TAGS (application-specific behavior)
+#run                Execute this task
+#run=command-name   Run a registered command
+#exec=executor-type Route to a specific executor
+#rerun              Always executable regardless of status
+
+SPEC LINKAGE
+#spec:path/req      Link task to a spec requirement
+
+TAG SEPARATORS
+  : for semantic relationships  #blocked-by:auth, #needs:api, #spec:auth/session
+  = for data values             #error=3, #tid=a1b2c3d4, #priority=1
 
 RESOLUTION
 - [x] [fixed: rewrote validation] Task description #tag [2026-03-14]
@@ -736,6 +809,21 @@ REGEX
 - Agent: an AI model or process that executes a task and returns success/failure
 
 ### Changelog
+
+#### Version 1.0
+
+- Added: Task IDs (#tid=xxxx) for stable identity across editing
+- Added: Execution tags (#run, #exec, #rerun) as format-level recognized tags
+- Added: Spec linkage (#spec:path/requirement) convention
+- Added: #needs:tag blocking semantics (blocks until tag's tasks are done)
+- Added: #error=N and #error="message" formalized
+- Added: #discovered tag for auto-discovered tasks
+- Added: Tag separator guidance (: for semantic, = for data)
+- Clarified: All v0.5 features unchanged and backward compatible
+
+#### Version 0.5
+
+- Initial public specification
 
 #### Version 0.4
 

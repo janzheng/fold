@@ -147,8 +147,6 @@ export function parseTasks(markdown: string): Task[] {
       const { due, rest: afterDue } = extractDueDate(afterResolution);
       const { description, tags } = extractTags(afterDue);
       const annotations = collectAnnotations(lines, i, indentChars);
-      const tidTag = tags.find(t => t.name === "tid");
-      const tid = tidTag?.value ? String(tidTag.value) : undefined;
 
       flat.push({
         line: lineNum,
@@ -159,7 +157,6 @@ export function parseTasks(markdown: string): Task[] {
         due,
         tags,
         agent: agentStr.length > 1 ? agentStr.slice(1) : undefined,
-        tid,
         raw: line,
         children: [],
         annotations,
@@ -179,8 +176,6 @@ export function parseTasks(markdown: string): Task[] {
       const { due, rest: afterDue } = extractDueDate(afterResolution);
       const { description, tags } = extractTags(afterDue);
       const annotations = collectAnnotations(lines, i, indentChars);
-      const tidTag = tags.find(t => t.name === "tid");
-      const tid = tidTag?.value ? String(tidTag.value) : undefined;
 
       flat.push({
         line: lineNum,
@@ -190,7 +185,6 @@ export function parseTasks(markdown: string): Task[] {
         resolution,
         due,
         tags,
-        tid,
         raw: line,
         children: [],
         annotations,

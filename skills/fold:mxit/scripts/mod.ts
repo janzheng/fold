@@ -13,7 +13,7 @@ export type {
 export { parseTasks } from "./parse.ts";
 export { serializeTasks, applyTasks } from "./serialize.ts";
 export { validateFormat } from "./validate.ts";
-export { getReady, flattenTasks } from "./ready.ts";
+export { getReady } from "./ready.ts";
 
 // File operations
 export {
@@ -22,5 +22,4 @@ export {
   failTask,
   resetCrashed,
   addDiscoveredTask,
-  addTask,
 } from "./fileops.ts";

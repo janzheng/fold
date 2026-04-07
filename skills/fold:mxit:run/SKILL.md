@@ -29,35 +29,90 @@ Read TASKS.md (and any TASKS-{area}.md files). A task is **ready** when:
 
 `[!]` tasks go first. Then `[ ]` in bullet order.
 
-If a TICKET or REDUCE doc is linked (`-> REDUCE/foo.md`), read it — that's the context for the task.
+If a TICKET or BRIEF doc is linked (`-> BRIEF/foo.md`), read it — that's the context for the task.
 
 ## Step 2: Plan Execution
 
-**Sequential (default):** You do tasks one at a time. Use for:
+**Sequential (default, 1-2 tasks):** You do tasks one at a time. Use for:
 - Tasks with side effects on each other
 - Small tasks (faster than worktree overhead)
 - When only 1-2 tasks are ready
 
-**Fan-out (parallel subagents in worktrees):** Use for:
-- 3+ independent ready tasks with no shared dependencies
-- Tasks in different areas (UI + API + infra)
-- Large tasks that benefit from isolation
+**Coordinator mode (3+ ready tasks):** Use the full research → synthesis → waves pipeline:
 
-To fan out, use the Agent tool with `isolation: "worktree"` for each task. Spawn all independent agents in a **single message** for true parallelism.
+### 2a. Research phase (parallel, read-only)
+
+For each ready task, spawn a read-only research agent:
 
 ```
-Agent(prompt: "Do task X. When done, report what you did.", isolation: "worktree")
-Agent(prompt: "Do task Y. When done, report what you did.", isolation: "worktree")
-Agent(prompt: "Do task Z. When done, report what you did.", isolation: "worktree")
+Agent(prompt: "Explore this task: '{task description}'.
+  Report: what files need changing, what dependencies exist,
+  what approach you'd take. Do NOT modify files.", subagent_type: "Explore")
 ```
 
-Each agent gets an isolated copy of the repo. No conflicts.
+Spawn all research agents in a **single message** for true parallelism. They read only — no conflicts possible.
+
+### 2b. Synthesis (you, the coordinator)
+
+Read all research reports. Then:
+
+1. **Detect file conflicts:** Which tasks touch the same files?
+   ```
+   Task A: "Fix auth null pointer"      → auth.ts
+   Task C: "Add refresh token support"  → auth.ts
+   Task B: "Update API docs"            → docs/api.md
+   Task D: "Fix CI pipeline"            → .github/workflows/
+   ```
+
+2. **Group into waves:**
+   - Tasks touching the same files → serialize (same wave, sequential)
+   - Independent tasks → parallelize (same wave, concurrent)
+   ```
+   Wave 1: [A, B, D] — A is serial (auth.ts), B+D parallel (independent)
+   Wave 2: [C] — depends on A's changes to auth.ts
+   ```
+
+3. **Write implementation specs per task** — not "do the task" but specific instructions:
+   ```
+   "In auth.ts:42, add null check: if (!user) return null.
+    Run tests in tests/auth_test.ts. Commit when green."
+   ```
+
+### 2c. Dispatch waves
+
+Fan out Wave 1 agents with **synthesized specs** + worktrees:
+
+```
+Agent(prompt: "Implementation spec: {spec}. Do the work, commit, report.", isolation: "worktree")
+Agent(prompt: "Implementation spec: {spec}. Do the work, commit, report.", isolation: "worktree")
+```
+
+Wait for Wave 1 to complete. Review and merge. Then dispatch Wave 2 (which can reference Wave 1's commits).
+
+### 2d. Verify each wave (fresh-eyes)
+
+After merging a wave, optionally spawn a fresh verification agent:
+
+```
+Agent(prompt: "Verify changes in [files]. Run tests. Try edge cases.
+  Report: does it actually work? Do NOT read the implementer's explanation —
+  judge only the code and test results.")
+```
+
+The verifier sees artifacts (code, tests, output), not arguments (agent's self-assessment).
+
+### Concurrency rules
+
+- **Read-only tasks** (research, analysis) — run in parallel freely
+- **Write tasks** (implementation) — one at a time per file set
+- **Verification** — can run alongside implementation on DIFFERENT file areas
+- **Never poll agents** — they report when done
 
 ## Step 3: Work
 
 For each task (whether you or a subagent):
 
-1. Read the task description and any linked docs (REDUCE, TICKET)
+1. Read the task description and any linked docs (BRIEF, TICKET)
 2. Claim it: mark `[@]` or `[@agent-name]` in TASKS.md
 3. Do the work
 4. If you discover new work during execution, note it as sub-items with `#discovered`
@@ -108,12 +163,28 @@ When fanning out subagents in worktrees:
 
 ### Agent prompt template
 
+For coordinator mode (with synthesized specs):
+```
+You are implementing this spec:
+
+{synthesized implementation spec from step 2b}
+
+Original task: {task description}
+Context: {any linked BRIEF/TICKET content}
+
+Do exactly what the spec says. Then report:
+1. What you changed (files, approach)
+2. Whether tests pass
+3. Any discovered sub-tasks
+```
+
+For sequential mode (no synthesis):
 ```
 You are working on this task from TASKS.md:
 
   - [ ] {task description}
 
-Context: {any linked REDUCE/TICKET content}
+Context: {any linked BRIEF/TICKET content}
 
 Do the work, then report:
 1. What you changed (files, approach)

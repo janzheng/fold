@@ -1,7 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import { parseTasks } from "./parse.ts";
 import { serializeTasks, applyTasks } from "./serialize.ts";
-import { getReady } from "./ready.ts";
+import { getReady, flattenTasks } from "./ready.ts";
 import { validateFormat } from "./validate.ts";
 
 const EXAMPLE = `# Auth Refactor
@@ -344,4 +344,61 @@ Deno.test("serializeTasks - round-trips due dates", () => {
   const output = serializeTasks(tasks);
   const reparsed = parseTasks(output);
   assertEquals(reparsed[0].due?.raw, "2026-03-31");
+});
+
+// --- Task IDs (tid) ---
+
+Deno.test("parseTasks - extracts tid from #tid tag", () => {
+  const md = `- [ ] Deploy service #tid=a1b2c3d4`;
+  const tasks = parseTasks(md);
+  assertEquals(tasks[0].tid, "a1b2c3d4");
+  assertEquals(tasks[0].description, "Deploy service");
+});
+
+Deno.test("parseTasks - tid is undefined when absent", () => {
+  const md = `- [ ] No tid here #feature`;
+  const tasks = parseTasks(md);
+  assertEquals(tasks[0].tid, undefined);
+});
+
+Deno.test("parseTasks - tid works with agent bracket", () => {
+  const md = `- [@claude-1] Working on it #tid=abcd1234`;
+  const tasks = parseTasks(md);
+  assertEquals(tasks[0].tid, "abcd1234");
+  assertEquals(tasks[0].agent, "claude-1");
+});
+
+// --- #needs:tag blocking ---
+
+Deno.test("getReady - needs:tag blocks until tag item is done", () => {
+  const md = `- [ ] Build API #api
+- [ ] Build dashboard #needs:api`;
+  const tasks = parseTasks(md);
+  const ready = getReady(tasks);
+  // Only API should be ready — dashboard needs api
+  assertEquals(ready.length, 1);
+  assertEquals(ready[0].description, "Build API");
+});
+
+Deno.test("getReady - needs:tag unblocks when tag item is done", () => {
+  const md = `- [x] Build API #api
+- [ ] Build dashboard #needs:api`;
+  const tasks = parseTasks(md);
+  const ready = getReady(tasks);
+  assertEquals(ready.length, 1);
+  assertEquals(ready[0].description, "Build dashboard");
+});
+
+// --- flattenTasks export ---
+
+Deno.test("flattenTasks - flattens nested tree", () => {
+  const md = `- [ ] Parent
+  - [ ] Child
+    - [ ] Grandchild`;
+  const tasks = parseTasks(md);
+  const flat = flattenTasks(tasks);
+  assertEquals(flat.length, 3);
+  assertEquals(flat[0].description, "Parent");
+  assertEquals(flat[1].description, "Child");
+  assertEquals(flat[2].description, "Grandchild");
 });

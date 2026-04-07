@@ -46,8 +46,6 @@ export interface Task {
   tags: Tag[];
   /** Agent name if status is @ and name is present: [@claude-1] */
   agent?: string;
-  /** Stable task ID from #tid=xxxx tag */
-  tid?: string;
   /** Raw full line text */
   raw: string;
   /** Child tasks (unlimited nesting) */

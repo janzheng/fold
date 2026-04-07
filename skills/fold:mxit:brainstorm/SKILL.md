@@ -9,6 +9,8 @@ The upstream phase. Before anything becomes a task, figure out WHAT to build and
 
 The output of brainstorming distills into `TASKS-DESIGN.md` and `TASKS-MAP.md`. The brainstorming itself is ephemeral.
 
+**IMPORTANT: Brainstorm mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit brainstorm mode first (e.g., start a change with `fold:mxit:change` or create tasks in TASKS.md). You MAY create EXPLORE-*.md files and BRIEF docs — that's capturing thinking, not implementing.
+
 ## When to Use This
 
 - Starting a new project — "what are we even building?"
@@ -189,15 +191,15 @@ When you commit to a direction, promote it:
 
 EXPLORE → TASKS is a one-way promotion. Don't demote committed tasks back to EXPLORE — use `[~] [deferred:]` in TASKS-DESIGN.md instead.
 
-### When EXPLORE leads to REDUCE
+### When EXPLORE leads to BRIEF
 
-Sometimes brainstorming identifies a topic that needs deep investigation before it can become a task. That's a REDUCE doc — see `/fold:mxit` for the full convention. The flow:
+Sometimes brainstorming identifies a topic that needs deep investigation before it can become a task. That's a BRIEF doc — see `/fold:mxit` for the full convention. The flow:
 
 1. **EXPLORE** surfaces "we should unify the retrieval layer" (speculative)
-2. **REDUCE** investigates how — architecture sketch, interface design, migration plan (conclusive)
-3. **TASKS** says "go implement `-> REDUCE/unified-retrieval.md`" (actionable)
+2. **BRIEF** investigates how — architecture sketch, interface design, migration plan (conclusive)
+3. **TASKS** says "go implement `-> .brief/unified-retrieval.md`" (actionable)
 
-EXPLORE asks "should we?" — REDUCE answers "here's how."
+EXPLORE asks "should we?" — BRIEF answers "here's how."
 
 ## How Brainstorming Becomes Tasks
 

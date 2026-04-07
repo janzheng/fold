@@ -266,7 +266,7 @@ For larger projects, TASKS.md alone gets overwhelmed. The mxit format scales wit
 TASKS-DESIGN.md     — why + how: mission, design, goals, decisions
 TASKS-MAP.md        — what: architecture tree + phased buildout
 .ticket/{name}.md    — delegation: scope, contracts, acceptance for a work chunk
-.reduce/{name}.md    — investigation: research boiled down to a recommendation
+.brief/{name}.md    — investigation: research boiled down to a recommendation
 TASKS-{area}.md     — deep backlog per area (e.g. TASKS-ui.md)
 TASKS.md            — now: the fridge list, what you're doing today
 ```
@@ -549,18 +549,18 @@ Standard mxit format. Same rules as TASKS.md. Scoped to one area:
 
 Only create area files when an area has enough active work (5+ tasks). Small areas stay inline in TASKS-MAP.md.
 
-### REDUCE — Deep Dive Documents
+### BRIEF — Deep Dive Documents
 
-When a task is too complex to just implement, someone needs to investigate first — spike on an architecture, debug a gnarly issue, research approaches, sketch a design. The result is a **REDUCE doc**: the investigation boiled down to a concentrated recommendation.
+When a task is too complex to just implement, someone needs to investigate first — spike on an architecture, debug a gnarly issue, research approaches, sketch a design. The result is a **BRIEF doc**: the investigation boiled down to a concentrated recommendation.
 
-REDUCE docs are the bridge between "we need to figure this out" and "go do the thing." They capture the thinking so it survives the conversation and any agent picking up the task gets full context.
+BRIEF docs are the bridge between "we need to figure this out" and "go do the thing." They capture the thinking so it survives the conversation and any agent picking up the task gets full context.
 
 #### Where they live
 
 ```
-.reduce/                         — folder for projects with multiple deep dives
-.reduce/unified-retrieval.md     — one doc per investigation
-.reduce/auth-race-condition.md
+.brief/                         — folder for projects with multiple deep dives
+.brief/unified-retrieval.md     — one doc per investigation
+.brief/auth-race-condition.md
 ```
 
 Always use the dotfolder — keeps project root clean.
@@ -591,14 +591,14 @@ The concluded design, fix, or approach. Clear enough that someone who wasn't in 
 Enough detail that an agent can execute without the original conversation context. Interface sketches, migration steps, key files to change, edge cases to handle.
 ```
 
-#### How tasks link to REDUCE docs
+#### How tasks link to BRIEF docs
 
 ```markdown
-- [ ] Unified retrieval layer `-> .reduce/unified-retrieval.md` #arch
-- [ ] Fix auth race condition `-> .reduce/auth-race-condition.md` #bug
+- [ ] Unified retrieval layer `-> .brief/unified-retrieval.md` #arch
+- [ ] Fix auth race condition `-> .brief/auth-race-condition.md` #bug
 ```
 
-The task is thin — the REDUCE doc has all the context. The agent reads the doc, then implements.
+The task is thin — the BRIEF doc has all the context. The agent reads the doc, then implements.
 
 #### Status lifecycle
 
@@ -606,9 +606,9 @@ The task is thin — the REDUCE doc has all the context. The agent reads the doc
 - **ready** — recommendation is clear, task can be picked up
 - **abandoned** — investigation concluded that the approach won't work (keep for future reference)
 
-When the linked task is completed, the REDUCE doc stays as documentation of the decision. Archive it with the task if needed.
+When the linked task is completed, the BRIEF doc stays as documentation of the decision. Archive it with the task if needed.
 
-#### When to write a REDUCE doc
+#### When to write a BRIEF doc
 
 - Architecture changes that need a design sketch first
 - Bugs that require investigation before fixing
@@ -621,9 +621,9 @@ When the linked task is completed, the REDUCE doc stays as documentation of the 
 - Tasks where the TASKS description is sufficient context
 - Quick fixes that don't need a design phase
 
-#### REDUCE vs EXPLORE
+#### BRIEF vs EXPLORE
 
-| | EXPLORE | REDUCE |
+| | EXPLORE | BRIEF |
 |---|---------|--------|
 | **Phase** | Before commitment | After investigation |
 | **Content** | Multiple paths, open questions | One recommendation, concluded |
@@ -631,7 +631,7 @@ When the linked task is completed, the REDUCE doc stays as documentation of the 
 | **Tone** | "Should we...?" | "Here's how, go build it" |
 | **Metaphor** | Sketchbook | Reduced sauce — concentrated essence |
 
-Both are upstream of TASKS, but EXPLORE is speculative and REDUCE is conclusive. An EXPLORE exercise might identify that you need a REDUCE spike on a specific topic.
+Both are upstream of TASKS, but EXPLORE is speculative and BRIEF is conclusive. An EXPLORE exercise might identify that you need a BRIEF spike on a specific topic.
 
 ### TICKET — Delegation Slips
 
@@ -691,9 +691,9 @@ Four fields + a post-hoc section. That's it.
 - Everything fits in TASKS-MAP sub-items
 - No interface contracts to protect
 
-#### TICKET vs REDUCE
+#### TICKET vs BRIEF
 
-| | REDUCE | TICKET |
+| | BRIEF | TICKET |
 |---|--------|--------|
 | **Job** | Investigation → recommendation | Delegation → safe execution |
 | **Answers** | "What should we build and why?" | "How do you build it without breaking everything else?" |
@@ -701,7 +701,7 @@ Four fields + a post-hoc section. That's it.
 | **Core content** | Problem, investigation, recommendation | Scope, contracts, acceptance criteria |
 | **Post-hoc** | — | Deviations section |
 
-A REDUCE might feed into a TICKET. The REDUCE figures out the approach, the TICKET packages the delegation context. But either can exist without the other.
+A BRIEF might feed into a TICKET. The BRIEF figures out the approach, the TICKET packages the delegation context. But either can exist without the other.
 
 ### Rules for the family
 

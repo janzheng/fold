@@ -15,52 +15,27 @@ function hasTag(task: Task, name: string): boolean {
 export function getReady(tasks: Task[], allTasks?: Task[]): Task[] {
   const flatAll = allTasks ?? flattenTasks(tasks);
   const openTags = collectOpenTags(flatAll);
-  const nonDoneTags = collectNonDoneTags(flatAll);
 
   const ready: Task[] = [];
-  collectReady(tasks, openTags, nonDoneTags, ready);
+  collectReady(tasks, openTags, ready);
   return ready;
 }
 
 /** Recursively find ready tasks at all nesting levels */
-function collectReady(
-  tasks: Task[],
-  openTags: Set<string>,
-  nonDoneTags: Set<string>,
-  ready: Task[],
-  parentBlocked = false,
-): void {
+function collectReady(tasks: Task[], openTags: Set<string>, ready: Task[]): void {
   for (const task of tasks) {
-    // A task is blocked if its parent is blocked OR it has its own blocked-by/needs
-    const selfBlocked = isBlockedBy(task, openTags, nonDoneTags);
-    const blocked = parentBlocked || selfBlocked;
-
-    if (!blocked && isReady(task, openTags, nonDoneTags)) {
+    if (isReady(task, openTags)) {
       ready.push(task);
     }
     // Also check children — a child can be ready even if parent isn't
-    // BUT blocked-by cascades: if parent is blocked, children are too
     if (task.children.length > 0) {
-      collectReady(task.children, openTags, nonDoneTags, ready, blocked);
+      collectReady(task.children, openTags, ready);
     }
   }
-}
-
-/** Check if a task has blocked-by or needs tags that resolve to open/non-done tags */
-function isBlockedBy(task: Task, openTags: Set<string>, nonDoneTags: Set<string>): boolean {
-  for (const tag of task.tags) {
-    if (tag.name === "blocked-by" && typeof tag.value === "string") {
-      if (openTags.has(tag.value)) return true;
-    }
-    if (tag.name === "needs" && typeof tag.value === "string") {
-      if (nonDoneTags.has(tag.value)) return true;
-    }
-  }
-  return false;
 }
 
 /** Flatten entire task tree into a single array */
-export function flattenTasks(tasks: Task[]): Task[] {
+function flattenTasks(tasks: Task[]): Task[] {
   const flat: Task[] = [];
   function walk(list: Task[]) {
     for (const task of list) {
@@ -85,21 +60,8 @@ function collectOpenTags(tasks: Task[]): Set<string> {
   return tags;
 }
 
-/** Collect all tags from non-done tasks (status is NOT "x") — used for #needs:tag blocking */
-function collectNonDoneTags(tasks: Task[]): Set<string> {
-  const tags = new Set<string>();
-  for (const task of tasks) {
-    if (task.status !== "x") {
-      for (const tag of task.tags) {
-        tags.add(tag.name);
-      }
-    }
-  }
-  return tags;
-}
-
 /** Check if a single task is ready */
-function isReady(task: Task, openTags: Set<string>, nonDoneTags: Set<string>): boolean {
+function isReady(task: Task, openTags: Set<string>): boolean {
   // Must be open or important
   if (task.status !== " " && task.status !== "!") return false;
 
@@ -112,13 +74,10 @@ function isReady(task: Task, openTags: Set<string>, nonDoneTags: Set<string>): b
   );
   if (hasPendingChildren) return false;
 
-  // Must not be blocked by an open tag or needs a non-done tag
+  // Must not be blocked by an open tag
   for (const tag of task.tags) {
     if (tag.name === "blocked-by" && typeof tag.value === "string") {
       if (openTags.has(tag.value)) return false;
-    }
-    if (tag.name === "needs" && typeof tag.value === "string") {
-      if (nonDoneTags.has(tag.value)) return false;
     }
   }
 

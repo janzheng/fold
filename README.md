@@ -173,6 +173,70 @@ deno task check   # Type-check
 
 The autorefine loop is inspired by Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) — an autonomous AI research setup where an agent modifies training code, runs 5-minute experiments, checks if the metric improved, keeps or discards, and loops forever. autoresearch works because `val_bpb` is a single number. fold extends the idea to subjective quality — things where "better" is a judgment call, not a measurement.
 
+## Ecosystem
+
+fold doesn't exist in isolation. It's the methodology layer in a larger stack of interconnected projects:
+
+```
+                    ┌─────────────────────────────────────────┐
+                    │           METHODOLOGY (fold)            │
+                    │                                         │
+                    │  playtest ──► mxit ──► autorefine       │
+                    │  (discover)  (track)   (improve)        │
+                    │                                         │
+                    │  + brainstorm (explore before commit)   │
+                    │  + brief (design docs)                  │
+                    │  + audit (parallel correctness sweep)   │
+                    │  + verify (check impl matches spec)     │
+                    └──────────────┬──────────────────────────┘
+                                   │
+          ┌────────────────────────┼────────────────────────┐
+          │                        │                        │
+    ┌─────▼──────┐          ┌──────▼──────┐          ┌──────▼──────┐
+    │  underproof │          │    expo     │          │   brigade   │
+    │  (editor +  │          │ (multi-agent│          │ (job queue +│
+    │  executor)  │          │ orchestrator│          │  plugins)   │
+    │             │          │             │          │             │
+    │ ProseMirror │          │ signal bus  │          │ cli-agent   │
+    │ task exec   │          │ spawn/race  │          │ coverflow   │
+    │ dispatch    │          │ review loop │          │ cron        │
+    │ FOH/BOH     │          │ web dash    │          │ HTTP API    │
+    └──────┬──────┘          └──────┬──────┘          └──────┬──────┘
+           │                        │                        │
+           └────────────────────────┼────────────────────────┘
+                                    │
+                             ┌──────▼──────┐
+                             │  snapshot   │
+                             │ (git-based  │
+                             │  rollback)  │
+                             └─────────────┘
+```
+
+### Where things live
+
+| Project | Location | What it does |
+|---------|----------|-------------|
+| **fold** | `/Users/janzheng/Desktop/Projects/_deno/apps/fold` | Canonical home. mxit spec, parser, CLI, all fold skills. The methodology. |
+| **mxit** (standalone) | `/Users/janzheng/Desktop/Projects/_deno/apps/mxit` | Standalone mxit CLI (may consolidate into fold) |
+| **underproof** | `/Users/janzheng/Desktop/Projects/_deno/apps/underproof` | Markdown editor + task executor. Has its own mxit fork with extensions (resolution brackets, tid, execution pipeline). Proving ground for mxit v1.0 features. |
+| **expo** | `/Users/janzheng/Desktop/Projects/_deno/apps/expo` | Multi-agent orchestrator. Signal bus, spawn/race/review patterns, web dashboard. |
+| **brigade** | `/Users/janzheng/Desktop/Projects/__resources/workshop/brigade` | Job queue + plugin system. Copies code from expo + mxit. Experimental — has 88 known audit findings. |
+| **snapshot** | `/Users/janzheng/Desktop/Projects/_deno/apps/snapshot` | Git-based filesystem rollback. Used by autorefine for safe iteration. |
+| **mcp-hub** | `/Users/janzheng/Desktop/Projects/mcp-hub` | Skill distribution hub. fold skills live in `mcp-hub/skills/fold:*` and get synced to `~/.claude/skills/`. |
+
+### Known divergence
+
+Underproof has forked mxit with significant extensions (resolution brackets, due dates, stable task IDs, blocked-by dependencies, execution tags, ProseMirror rendering). These are battle-tested and should be upstreamed into fold's canonical MXIT_SPEC.md as v1.0. See research notes: `github-repos/_workshop/openspec-beads-vs-fold-mxit.md` for the full divergence map and architectural recommendations.
+
+### Research & competitive landscape
+
+Detailed analysis of comparable tools lives in `github-repos/`:
+- **[OpenSpec](https://github.com/Fission-AI/OpenSpec)** (34.6k stars) — Spec-driven development for AI agents. Delta specs, archive as decision history, verify against spec. Key ideas to borrow: `changes/` lifecycle, delta spec format, no-code explore mode.
+- **[Beads](https://github.com/steveyegge/beads)** (19.8k stars) — Issue tracker for AI agent crews. Hash-based IDs, atomic claiming, agent messaging. Key ideas to borrow: hash task IDs, semantic compaction.
+- **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** (13.6k stars) — Self-improving agent with skill creation, bounded memory, session search. Key insight: the self-improvement system is just prompt engineering + tool calling — portable to any framework.
+
+Deep dive with concrete recommendations: `github-repos/_workshop/openspec-beads-vs-fold-mxit.md`
+
 ## License
 
 MIT

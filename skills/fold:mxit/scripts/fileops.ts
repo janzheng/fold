@@ -2,7 +2,7 @@ import { parseTasks } from "./parse.ts";
 import type { Task, Tag } from "./types.ts";
 
 const TASK_RE = /^(\s*)- \[([ x~@!?*]|@[^\]]*)\]\s+(.+)$/;
-const TAG_RE = /#(\w[\w-]*)(?:[=:](?:"([^"]*)"|([\w.:-]+)))?/g;
+const TAG_RE = /#(\w[\w-]*)(?:=(?:"([^"]*)"|([\w.]+)))?/g;
 
 /** Read file, apply transform to a specific line, write back */
 async function modifyLine(
@@ -46,14 +46,9 @@ function removeTag(line: string, tagName: string): string {
   return line.replace(re, "");
 }
 
-/** Insert a resolution bracket after the status bracket, replacing any existing one */
+/** Insert a resolution bracket after the status bracket */
 function insertResolution(line: string, keyword: string, message: string): string {
-  // Remove any existing resolution bracket first
-  const cleaned = line.replace(
-    /^(\s*- \[[^\]]*\])\s+\[\w+:\s*[^\]]*\]\s*/,
-    "$1 ",
-  );
-  return cleaned.replace(
+  return line.replace(
     /^(\s*- \[[^\]]*\])\s+/,
     `$1 [${keyword}: ${message}] `,
   );
@@ -187,34 +182,4 @@ export async function addDiscoveredTask(
 
   lines.splice(insertAt, 0, childLine);
   await Deno.writeTextFile(filePath, lines.join("\n"));
-}
-
-/**
- * Add a new task to the end of the file (or before a specific section).
- * Returns the line number of the new task.
- */
-export async function addTask(
-  filePath: string,
-  title: string,
-  tags: string[] = [],
-  status = " ",
-): Promise<number> {
-  const content = await Deno.readTextFile(filePath);
-  const lines = content.split("\n");
-
-  const tagStr = tags.length > 0 ? " " + tags.map((t) => `#${t}`).join(" ") : "";
-  const newLine = `- [${status}] ${title}${tagStr}`;
-
-  // Find last task line and insert after it; if no tasks, append at end
-  let insertAt = lines.length;
-  for (let i = lines.length - 1; i >= 0; i--) {
-    if (TASK_RE.test(lines[i]) || /^\s*<!--/.test(lines[i])) {
-      insertAt = i + 1;
-      break;
-    }
-  }
-
-  lines.splice(insertAt, 0, newLine);
-  await Deno.writeTextFile(filePath, lines.join("\n"));
-  return insertAt + 1; // 1-based line number
 }

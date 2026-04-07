@@ -65,3 +65,15 @@ deno task mxit fail TASKS.md 5 --error "timeout"
 deno task mxit recover TASKS.md          # Reset crashed [@] tasks
 deno task mxit run TASKS.md              # Full loop: recover → ready → show
 ```
+
+## Ecosystem context
+
+fold is the methodology layer. Related projects (see README for full map):
+
+- **underproof** — Editor + executor. Has a forked mxit with extensions (resolution brackets, tid, execution pipeline). These should be upstreamed to fold as mxit v1.0.
+- **expo** — Multi-agent orchestrator. Signal bus, race, review loops.
+- **brigade** — Job queue experiment. Copies from expo + mxit. 88 known audit findings.
+- **snapshot** — Git-based rollback. Used by autorefine.
+- **mcp-hub** — Skill distribution. fold skills at `mcp-hub/skills/fold:*`.
+
+Research on comparable tools (OpenSpec, Beads, Hermes) with concrete improvement recommendations: `github-repos/_workshop/openspec-beads-vs-fold-mxit.md`
