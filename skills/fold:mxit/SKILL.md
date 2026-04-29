@@ -555,6 +555,8 @@ When a task is too complex to just implement, someone needs to investigate first
 
 BRIEF docs are the bridge between "we need to figure this out" and "go do the thing." They capture the thinking so it survives the conversation and any agent picking up the task gets full context.
 
+**Briefs are single-topic, single-moment, and point forward at execution.** They don't track work over time. If you find yourself updating the same brief week after week, you wanted a `.journal/` series — see `/journal`.
+
 #### Where they live
 
 ```
@@ -563,7 +565,7 @@ BRIEF docs are the bridge between "we need to figure this out" and "go do the th
 .brief/auth-race-condition.md
 ```
 
-Always use the dotfolder — keeps project root clean.
+Always use the dotfolder — keeps project root clean. No date prefix on filenames; if you're tempted to date a brief, it should be a journal entry.
 
 #### Shape
 
@@ -600,13 +602,13 @@ Enough detail that an agent can execute without the original conversation contex
 
 The task is thin — the BRIEF doc has all the context. The agent reads the doc, then implements.
 
-#### Status lifecycle
+#### Status lifecycle (one-way, bounded)
 
-- **wip** — investigation ongoing, not ready to implement
+- **wip** — actively writing, not yet ready to hand off. Should resolve in days, not weeks. If `wip` lingers, the brief was the wrong shape — switch to journal entries.
 - **ready** — recommendation is clear, task can be picked up
 - **abandoned** — investigation concluded that the approach won't work (keep for future reference)
 
-When the linked task is completed, the BRIEF doc stays as documentation of the decision. Archive it with the task if needed.
+When the linked task ships, the BRIEF doc is archive. If thinking shifts, write a *new* brief and mark the old one `[abandoned: superseded by .brief/X.md]` — don't keep mutating one document.
 
 #### When to write a BRIEF doc
 
@@ -620,18 +622,23 @@ When the linked task is completed, the BRIEF doc stays as documentation of the d
 - Simple tasks where the implementation is obvious
 - Tasks where the TASKS description is sufficient context
 - Quick fixes that don't need a design phase
+- **Tracking what's happening over time** — that's `/journal`, not a brief
+- **A single decision log** ("we decided X because Y") — `.journal/` entry with `type: decision`
+- **Open exploration with multiple paths** — that's EXPLORE (`fold:mxit:brainstorm`)
 
-#### BRIEF vs EXPLORE
+#### BRIEF vs JOURNAL vs EXPLORE
 
-| | EXPLORE | BRIEF |
-|---|---------|--------|
-| **Phase** | Before commitment | After investigation |
-| **Content** | Multiple paths, open questions | One recommendation, concluded |
-| **Promotes to** | TASKS-DESIGN (strategy) | TASKS (actionable work) |
-| **Tone** | "Should we...?" | "Here's how, go build it" |
-| **Metaphor** | Sketchbook | Reduced sauce — concentrated essence |
+| | EXPLORE | JOURNAL | BRIEF |
+|---|---------|---------|--------|
+| **Question** | "Should we?" | "What did we think?" | "Here's how" |
+| **Time-shape** | Speculative — multiple paths | Time-series — dated entries | Single moment — frozen |
+| **Updated over time** | Yes, while exploring | No — append new entries | No — write a new brief if thinking shifts |
+| **Has a recommendation** | No, multiple paths | No, just observations | Yes, one |
+| **Audience** | Self / collaborator brainstorming | Future-you | Executor (agent, teammate, future-you) |
+| **Lives in** | `EXPLORE-{topic}.md` | `.journal/YYYY-MM-DD-<slug>.md` | `.brief/<slug>.md` |
+| **Lifecycle** | Promote to TASKS or DESIGN | Append-only | Archive once executed |
 
-Both are upstream of TASKS, but EXPLORE is speculative and BRIEF is conclusive. An EXPLORE exercise might identify that you need a BRIEF spike on a specific topic.
+Pipeline: EXPLORE narrows down speculation → JOURNAL captures the thinking and decisions over time → BRIEF concentrates a converged investigation into something an executor can run with.
 
 ### TICKET — Delegation Slips
 
