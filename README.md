@@ -216,12 +216,12 @@ fold doesn't exist in isolation. It's the methodology layer in a larger stack of
 
 | Project | Location | What it does |
 |---------|----------|-------------|
-| **fold** | `/Users/janzheng/Desktop/Projects/_deno/apps/fold` | Canonical home. mxit spec, parser, CLI, all fold skills. The methodology. |
-| **mxit** (standalone) | `/Users/janzheng/Desktop/Projects/_deno/apps/mxit` | Standalone mxit CLI (may consolidate into fold) |
-| **underproof** | `/Users/janzheng/Desktop/Projects/_deno/apps/underproof` | Markdown editor + task executor. Has its own mxit fork with extensions (resolution brackets, tid, execution pipeline). Proving ground for mxit v1.0 features. |
-| **expo** | `/Users/janzheng/Desktop/Projects/_deno/apps/expo` | Multi-agent orchestrator. Signal bus, spawn/race/review patterns, web dashboard. |
+| **fold** | `/Users/janzheng/Desktop/Projects/__active/_apps/fold` | Canonical home. mxit spec, parser, CLI, all fold skills. The methodology. |
+| **mxit** (standalone) | `/Users/janzheng/Desktop/Projects/__active/_apps/mxit` | Standalone mxit CLI (may consolidate into fold) |
+| **underproof** | `/Users/janzheng/Desktop/Projects/__active/_apps/underproof` | Markdown editor + task executor. Has its own mxit fork with extensions (resolution brackets, tid, execution pipeline). Proving ground for mxit v1.0 features. |
+| **expo** | `/Users/janzheng/Desktop/Projects/__active/_apps/expo` | Multi-agent orchestrator. Signal bus, spawn/race/review patterns, web dashboard. |
 | **brigade** | `/Users/janzheng/Desktop/Projects/__resources/workshop/brigade` | Job queue + plugin system. Copies code from expo + mxit. Experimental — has 88 known audit findings. |
-| **snapshot** | `/Users/janzheng/Desktop/Projects/_deno/apps/snapshot` | Git-based filesystem rollback. Used by autorefine for safe iteration. |
+| **snapshot** | `/Users/janzheng/Desktop/Projects/__active/_apps/snapshot` | Git-based filesystem rollback. Used by autorefine for safe iteration. |
 | **mcp-hub** | `/Users/janzheng/Desktop/Projects/mcp-hub` | Skill distribution hub. fold skills live in `mcp-hub/skills/fold:*` and get synced to `~/.claude/skills/`. |
 
 ### Known divergence

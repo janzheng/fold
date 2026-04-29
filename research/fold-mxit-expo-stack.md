@@ -1,6 +1,6 @@
 # The Fold Stack: mxit + expo + fold
 
-> **Note:** The canonical ecosystem map now lives in fold's README at `/Users/janzheng/Desktop/Projects/_deno/apps/fold/README.md` (see "Ecosystem" section). This document is preserved for its deeper analysis of the mxit+expo+fold composition pattern.
+> **Note:** The canonical ecosystem map now lives in fold's README at `/Users/janzheng/Desktop/Projects/__active/_apps/fold/README.md` (see "Ecosystem" section). This document is preserved for its deeper analysis of the mxit+expo+fold composition pattern.
 
 *Deep dive — three loosely coupled projects that together form a lightweight alternative to Paperclip-style control planes.*
 
@@ -96,7 +96,7 @@ This is the Paperclip insight (separate control plane from execution) without th
 
 ## Canonical locations
 
-- **mxit:** `/Users/janzheng/Desktop/Projects/_deno/apps/mxit/`
-- **expo:** `/Users/janzheng/Desktop/Projects/_deno/apps/expo/`
-- **fold:** `/Users/janzheng/Desktop/Projects/_deno/apps/fold/`
+- **mxit:** `/Users/janzheng/Desktop/Projects/__active/_apps/mxit/`
+- **expo:** `/Users/janzheng/Desktop/Projects/__active/_apps/expo/`
+- **fold:** `/Users/janzheng/Desktop/Projects/__active/_apps/fold/`
 - **Skills (distribution):** `/Users/janzheng/Desktop/Projects/mcp-hub/skills/`

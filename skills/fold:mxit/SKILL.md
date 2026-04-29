@@ -8,9 +8,9 @@ description: The complete mxit task system — set up TASKS.md, manage the TASKS
 The **track** facet of fold. Set up and manage `TASKS.md` files, scale to the full TASKS family for bigger projects, and run the task lifecycle with multi-agent coordination.
 
 > **Canonical repos:** This skill is the implementation layer. The canonical spec and parser live elsewhere:
-> - **Spec:** `/Users/janzheng/Desktop/Projects/_deno/apps/mxit/MXIT_SPEC.md`
-> - **Parser/CLI:** `/Users/janzheng/Desktop/Projects/_deno/apps/mxit/src/`
-> - **fold (parent):** `/Users/janzheng/Desktop/Projects/_deno/apps/fold/`
+> - **Spec:** `/Users/janzheng/Desktop/Projects/__active/_apps/mxit/MXIT_SPEC.md`
+> - **Parser/CLI:** `/Users/janzheng/Desktop/Projects/__active/_apps/mxit/src/`
+> - **fold (parent):** `/Users/janzheng/Desktop/Projects/__active/_apps/fold/`
 > - **Skills (this repo):** `/Users/janzheng/Desktop/Projects/mcp-hub/skills/`
 
 ## Quick Setup

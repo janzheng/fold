@@ -1,4 +1,4 @@
-> **Archived:** The canonical fold skills now live in the fold project at `/Users/janzheng/Desktop/Projects/_deno/apps/fold/skills/` and are distributed via `/Users/janzheng/Desktop/Projects/mcp-hub/skills/fold*/`. The skill drafts in this folder (Mar 15 2026) are superseded. This README is preserved for its philosophy writeup.
+> **Archived:** The canonical fold skills now live in the fold project at `/Users/janzheng/Desktop/Projects/__active/_apps/fold/skills/` and are distributed via `/Users/janzheng/Desktop/Projects/mcp-hub/skills/fold*/`. The skill drafts in this folder (Mar 15 2026) are superseded. This README is preserved for its philosophy writeup.
 
 # fold
 
