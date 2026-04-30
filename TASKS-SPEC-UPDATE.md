@@ -26,7 +26,7 @@ Based on research: `github-repos/_workshop/openspec-beads-vs-fold-mxit.md`
 
 ## Phase 3: New skills
 
-- [x] [done: added IMPORTANT block after description] Add no-code constraint to `fold:mxit:brainstorm` #skill #quick
+- [x] [done: added IMPORTANT block after description] Add no-code constraint to `fold:mxit:explore` #skill #quick
 - [x] [done: completeness/correctness/coherence checks, mxit output format] Create `fold:verify/SKILL.md` #skill
 - [x] [done: full lifecycle with PROPOSAL/SPECS/DESIGN/TASKS, schemas, archive] Create `fold:mxit:change/SKILL.md` #skill
 - [x] [done: delta format, GIVEN/WHEN/THEN as checkboxes, RFC 2119, spec linkage] Create `fold:mxit:spec/SKILL.md` #skill

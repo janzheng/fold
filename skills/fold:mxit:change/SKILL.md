@@ -42,7 +42,7 @@ changes/
 
 ### 1. Explore (optional)
 
-If requirements are unclear, use `fold:mxit:brainstorm` first. When insights crystallize, promote to a change.
+If requirements are unclear, use `fold:mxit:explore` first. When insights crystallize, promote to a change.
 
 **IMPORTANT:** During exploration, do NOT write code. Think, investigate, diagram. Code comes later.
 

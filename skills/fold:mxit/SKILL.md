@@ -38,7 +38,7 @@ For bigger projects (3+ areas), also suggest TASKS-MAP.md and TASKS-DESIGN.md �
 
 - `/fold:playtest` — discoveries get emitted as mxit tasks with `#found`
 - `/fold:autorefine` — too-big issues get emitted as mxit tasks with `#found #autorefine`
-- `/fold:mxit:brainstorm` — speculative exploration (EXPLORE files) feeds into TASKS when committed
+- `/fold:mxit:explore` — speculative exploration (EXPLORE files) feeds into TASKS when committed
 - `/fold` — the full loop: discover → track → improve → fold again
 
 ---
@@ -624,7 +624,7 @@ When the linked task ships, the BRIEF doc is archive. If thinking shifts, write 
 - Quick fixes that don't need a design phase
 - **Tracking what's happening over time** — that's `/journal`, not a brief
 - **A single decision log** ("we decided X because Y") — `.journal/` entry with `type: decision`
-- **Open exploration with multiple paths** — that's EXPLORE (`fold:mxit:brainstorm`)
+- **Open exploration with multiple paths** — that's EXPLORE (`fold:mxit:explore`)
 
 #### BRIEF vs JOURNAL vs EXPLORE
 

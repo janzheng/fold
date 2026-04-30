@@ -27,7 +27,7 @@ If you find yourself updating the same brief over weeks, you wanted a journal �
 ## When NOT to write a brief
 
 - **Tracking what's happening over time** — that's `/journal`. Briefs don't grow; journal entries accumulate.
-- **Open exploration** — multiple paths, "should we?" — that's EXPLORE (`fold:mxit:brainstorm`).
+- **Open exploration** — multiple paths, "should we?" — that's EXPLORE (`fold:mxit:explore`).
 - **A single decision log** — a one-line "we decided X because Y" goes in `.journal/` as a `type: decision` entry, not a brief.
 - **A pile of cross-cutting notes** — that's a journal entry or a notes file, not a brief.
 - **Something you'll keep amending as you learn** — write journal entries first; promote to a brief once thinking has converged.
@@ -119,5 +119,5 @@ The task is thin — the BRIEF doc has all the context.
 ## See also
 
 - `/fold:mxit` — full BRIEF reference + TASKS family docs
-- `/fold:mxit:brainstorm` — upstream exploration (EXPLORE files)
+- `/fold:mxit:explore` — upstream exploration (EXPLORE files)
 - `/journal` — time-series lab notebook for record-keeping over time
