@@ -1,3 +1,20 @@
+<!--
+ARCHIVED 2026-05-13 — moved into `__active/_apps/fold/skills/_archive/`
+alongside other hub-unregistered fold skills. File renamed back from
+SKILL.parked.md to SKILL.md since the `_archive/` location already prevents
+auto-loading. Original park note preserved below.
+
+PARKED 2026-05-05 — content folded into the consolidated parent skill at
+`../../fold:playtest/SKILL.md` (see `## Workflow: Run`). Kept on disk for
+revivability.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold:playtest:run/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Trim the corresponding `## Workflow: Run` section out of the parent
+     fold:playtest/SKILL.md so the two don't duplicate
+  4. Copy to `mcp-hub/skills/fold:playtest:run/` and run `sync-skills.sh`
+-->
 ---
 name: fold:playtest:run
 description: Execute directed agentic playtests — the "discover" facet of fold. Read — read the playtest file, operate the system as a user would, make judgment calls, mark results, track duration. Use when the user says "run playtest", "run the smoke test", "execute playtest", or points you at a playtest .md file to execute.

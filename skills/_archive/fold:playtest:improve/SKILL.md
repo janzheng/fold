@@ -1,3 +1,20 @@
+<!--
+ARCHIVED 2026-05-13 — moved into `__active/_apps/fold/skills/_archive/`
+alongside other hub-unregistered fold skills. File renamed back from
+SKILL.parked.md to SKILL.md since the `_archive/` location already prevents
+auto-loading. Original park note preserved below.
+
+PARKED 2026-05-05 — content folded into the consolidated parent skill at
+`../../fold:playtest/SKILL.md` (see `## Workflow: Improve`). Kept on disk
+for revivability.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold:playtest:improve/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Trim the corresponding `## Workflow: Improve` section out of the parent
+     fold:playtest/SKILL.md so the two don't duplicate
+  4. Copy to `mcp-hub/skills/fold:playtest:improve/` and run `sync-skills.sh`
+-->
 ---
 name: fold:playtest:improve
 description: Run the analyze-then-fix pipeline — the "discover" facet of fold. One — one agent produces findings as a checklist, another works through fixing them. Self-improvement through playtesting. Use when the user says "analyze and fix", "self-improve", "review and fix", "dogfood this", "find issues and fix them", or wants the analyze→fix pipeline.

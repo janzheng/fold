@@ -1,3 +1,20 @@
+<!--
+ARCHIVED 2026-05-13 — moved into `__active/_apps/fold/skills/_archive/`
+alongside other hub-unregistered fold skills. File renamed back from
+SKILL.parked.md to SKILL.md since the `_archive/` location already prevents
+auto-loading. Original park note preserved below.
+
+PARKED 2026-05-05 — content folded into the consolidated parent skill at
+`../../fold:playtest/SKILL.md` (see `## Workflow: Explore`). Kept on disk
+for revivability.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold:playtest:explore/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Trim the corresponding `## Workflow: Explore` section out of the parent
+     fold:playtest/SKILL.md so the two don't duplicate
+  4. Copy to `mcp-hub/skills/fold:playtest:explore/` and run `sync-skills.sh`
+-->
 ---
 name: fold:playtest:explore
 description: Run exploratory agentic playtests — the "discover" facet of fold. Open-ended — open-ended investigation with no script. Fresh eyes, adversarial probing, ergonomics review, discovery of unknown unknowns. Use when the user says "explore this", "try to break it", "fresh eyes", "what's wrong with this", "use it and tell me what's awkward", or wants open-ended system feedback.

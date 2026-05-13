@@ -1,3 +1,16 @@
+<!--
+ARCHIVED 2026-04-30 — unregistered from hub via commit f9706c6c
+("chore(skills): unregister 10 fold skills (round 1 triage)").
+Reason cited in commit: "rarely used."
+
+Moved into `__active/_apps/fold/skills/_archive/` on 2026-05-13 so it
+no longer sits alongside live skills. Content unmodified.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold:ship/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Copy to `mcp-hub/skills/fold:ship/` and run `sync-skills.sh`
+-->
 ---
 name: fold:ship
 description: "Pre-ship wrap-up — clean tasks, run tests, fix bugs, playtest (including adversarial), verify, update docs. The 'are we done?' checklist that chains fold skills into a single pass. Use when the user says 'ship it', 'wrap up', 'clean up tasks', 'are we ready to ship', 'pre-ship checklist', 'fold:ship', or wants to finalize an iteration before release."

@@ -1,3 +1,16 @@
+<!--
+ARCHIVED 2026-04-30 — unregistered from hub via commit f9706c6c
+("chore(skills): unregister 10 fold skills (round 1 triage)").
+Reason cited in commit: "rarely used."
+
+Moved into `__active/_apps/fold/skills/_archive/` on 2026-05-13 so it
+no longer sits alongside live skills. Content unmodified.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold:verify/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Copy to `mcp-hub/skills/fold:verify/` and run `sync-skills.sh`
+-->
 ---
 name: fold:verify
 description: "Verify implementation matches specs, design, and tasks before archiving a change. Checks completeness, correctness, and coherence. Use when the user says 'verify this', 'check the implementation', 'are we done?', or before archiving a change."

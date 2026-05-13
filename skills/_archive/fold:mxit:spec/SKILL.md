@@ -1,3 +1,16 @@
+<!--
+ARCHIVED 2026-04-30 — unregistered from hub via commit f9706c6c
+("chore(skills): unregister 10 fold skills (round 1 triage)").
+Reason cited in commit: "specialized sub-skill."
+
+Moved into `__active/_apps/fold/skills/_archive/` on 2026-05-13 so it
+no longer sits alongside live skills. Content unmodified.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold:mxit:spec/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Copy to `mcp-hub/skills/fold:mxit:spec/` and run `sync-skills.sh`
+-->
 ---
 name: fold:mxit:spec
 description: "Write and manage delta specs — ADDED/MODIFIED/REMOVED requirements with GIVEN/WHEN/THEN scenarios as mxit checkboxes. Use when creating SPECS.md for a change, updating project specs, or working with behavior contracts."

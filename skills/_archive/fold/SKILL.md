@@ -1,3 +1,16 @@
+<!--
+ARCHIVED 2026-04-30 — unregistered from hub via commit f9706c6c
+("chore(skills): unregister 10 fold skills (round 1 triage)").
+Reason cited in commit: "core meta wrapper, never invoked directly."
+
+Moved into `__active/_apps/fold/skills/_archive/` on 2026-05-13 so it
+no longer sits alongside live skills. Content unmodified.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Copy to `mcp-hub/skills/fold/` and run `sync-skills.sh`
+-->
 ---
 name: fold
 description: The self-improving project loop — playtest (discover) + mxit (track) + autorefine (improve), folded repeatedly. Use when the user says "fold this project", "fold", "discover track improve", or wants to run the full loop of finding issues, tracking them, and iterating until quality converges.

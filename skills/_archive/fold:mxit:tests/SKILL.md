@@ -1,3 +1,16 @@
+<!--
+ARCHIVED 2026-04-30 — unregistered from hub via commit f9706c6c
+("chore(skills): unregister 10 fold skills (round 1 triage)").
+Reason cited in commit: "specialized sub-skill."
+
+Moved into `__active/_apps/fold/skills/_archive/` on 2026-05-13 so it
+no longer sits alongside live skills. Content unmodified.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold:mxit:tests/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Copy to `mcp-hub/skills/fold:mxit:tests/` and run `sync-skills.sh`
+-->
 ---
 name: fold:mxit:tests
 description: Plan, create, and manage test tasks within mxit — brainstorm tests before building, add test gates to phases, run tests and record results, re-run after fixes. TDD-style task planning. Use when the user says "plan tests", "add tests", "test gate", "what should we test", "brainstorm tests", "run tests", "check tests", "fold:mxit:tests", or wants to integrate testing into their TASKS workflow.

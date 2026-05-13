@@ -1,3 +1,16 @@
+<!--
+ARCHIVED 2026-04-30 — unregistered from hub via commit f9706c6c
+("chore(skills): unregister 10 fold skills (round 1 triage)").
+Reason cited in commit: "specialized sub-skill."
+
+Moved into `__active/_apps/fold/skills/_archive/` on 2026-05-13 so it
+no longer sits alongside live skills. Content unmodified.
+
+To revive as a standalone skill:
+  1. git mv this dir back to `../fold:mxit:change/` (out of `_archive/`)
+  2. Delete this comment block
+  3. Copy to `mcp-hub/skills/fold:mxit:change/` and run `sync-skills.sh`
+-->
 ---
 name: fold:mxit:change
 description: "Manage structured changes — propose, spec, design, implement, verify, archive. Use when the user wants to start a new feature, plan a refactor, or track a non-trivial piece of work with full context preservation."

@@ -107,14 +107,16 @@ fold/
 │   ├── fileops.ts         # claim, complete, fail, recover, add, discover operations
 │   ├── types.ts           # Task, Tag, Resolution, DueDate types
 │   └── mod.ts             # Library exports
-└── skills/                # Claude Code skills
-    ├── mxit/              # Task format and tracking (with bundled scripts)
-    ├── mxit:run/          # Task runner and orchestration
-    ├── playtest/          # Write playtests
-    ├── playtest:run/      # Execute directed playtests
-    ├── playtest:explore/  # Exploratory playtesting
-    ├── playtest:improve/  # Analyze → fix pipeline
-    └── autorefine/        # Autonomous refinement loop
+└── skills/                # Claude Code skills (canonical)
+    ├── fold:11star/       # UX 11-star rating + levelling
+    ├── fold:audit/        # Read-only deep codebase audit
+    ├── fold:autorefine/   # Autonomous refinement loop
+    ├── fold:mxit/         # Task format and tracking
+    ├── fold:mxit:brief/   # Single-topic execution brief
+    ├── fold:mxit:explore/ # EXPLORE files (ideas → brainstorms)
+    ├── fold:mxit:run/     # Task lifecycle runner
+    ├── fold:playtest/     # Playtest umbrella (write + run + explore + improve modes)
+    └── _archive/          # Unregistered-from-hub skills, kept for revivability — see "Skills" section below
 ```
 
 ## mxit CLI
@@ -150,17 +152,29 @@ See `MXIT_SPEC.md` for the full specification.
 
 ## Skills
 
-Each skill is a `SKILL.md` file that teaches an AI agent a capability. Install by copying to `~/.claude/skills/`:
+Each skill is a `SKILL.md` file that teaches an AI agent a capability. The live set is distributed through `mcp-hub` (`mcp-hub/skills/fold:*`) and synced to `~/.claude/skills/`.
 
 | Skill | Purpose |
 |-------|---------|
-| `mxit` | Read and write TASKS.md files |
-| `mxit:run` | Run the task lifecycle (claim → work → done/fail) |
-| `playtest` | Write discovery-focused playtests |
-| `playtest:run` | Execute directed playtests |
-| `playtest:explore` | Open-ended exploratory testing |
-| `playtest:improve` | Analyze → fix pipeline |
-| `autorefine` | Iterative improvement with rubric negotiation |
+| `fold:11star` | Rate + improve UX on the 11-star scale |
+| `fold:audit` | Deep read-only codebase audit (race conditions, swallowed errors, security, wiring) |
+| `fold:autorefine` | Autonomous refinement loop with rubrics or comparative checks |
+| `fold:mxit` | Markdown-native task tracking — statuses, tags, dependencies, multi-agent |
+| `fold:mxit:brief` | Single-topic execution brief from investigation → handoff |
+| `fold:mxit:explore` | EXPLORE files — stray thoughts → brainstorms → specs |
+| `fold:mxit:run` | Task lifecycle runner (ready → claim → done/fail) |
+| `fold:playtest` | Playtest umbrella — `run` (directed), `explore` (fresh eyes / adversarial), `improve` (analyze → fix) |
+
+### Archived skills — `skills/_archive/`
+
+Skills that were once hub-registered but unregistered later live under `skills/_archive/<name>/`. They keep their `SKILL.md` and an HTML-comment header noting when and why they were archived (commit reference + reason from the original triage). Two batches today:
+
+- **Unregistered 2026-04-30** via commit `f9706c6c` ("round 1 triage"): `fold`, `fold:ship`, `fold:verify`, `fold:mxit:change`, `fold:mxit:spec`, `fold:mxit:tests`. Reasons quoted in each file's header — "core meta wrapper, never invoked directly" / "rarely used" / "specialized sub-skill."
+- **Parked 2026-05-05** when the playtest sub-skills got folded into the `fold:playtest` umbrella: `fold:playtest:run`, `fold:playtest:explore`, `fold:playtest:improve`. Original PARKED notes preserved in each header.
+
+Why a dedicated `_archive/` dir instead of a `SKILL.parked.md` suffix? Two cleaner properties: (1) the location alone prevents auto-loading without needing a special filename, (2) `git mv` records the archive event as a real move so history is auditable. Revival instructions live inside each file's header — `git mv` the dir back out of `_archive/`, drop the comment block, copy to `mcp-hub/skills/`, run `sync-skills.sh`.
+
+**Rule:** never delete from `_archive/`. Canonical is home; the archive is the durable historical record, not transitional.
 
 ## Running tests
 
