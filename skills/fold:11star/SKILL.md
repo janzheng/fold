@@ -1,11 +1,18 @@
 ---
 name: fold:11star
-description: "Rate and improve a product's UX on the 11-star scale — from 'it works' (1-star) to 'it's magic' (11-star). Use when the user says 'rate the UX', '11 star', 'star rating', 'how good is the experience', 'UX audit', 'experience rating', 'what star are we at', 'how do we get to N star', or wants to evaluate and level up a product's user experience."
+description: "Rate and improve a product's UX on the 11-star scale. Use for UX audits, experience ratings, and deciding how to level up a product."
 version: 0.1.0
 license: MIT
 ---
 
 # fold:11star — UX Star Rating
+
+
+## Lookup Cues
+
+Former frontmatter detail, kept here so global lookup stays compact:
+
+> Rate and improve a product's UX on the 11-star scale — from 'it works' (1-star) to 'it's magic' (11-star). Use when the user says 'rate the UX', '11 star', 'star rating', 'how good is the experience', 'UX audit', 'experience rating', 'what star are we at', 'how do we get to N star', or wants to evaluate and level up a product's user experience.
 
 Rate where a product sits on the 11-star scale, then identify the smallest changes to reach the next level. Inspired by Brian Chesky's 11-star framework, adapted for software products used by both humans and AI agents.
 

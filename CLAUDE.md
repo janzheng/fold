@@ -62,6 +62,16 @@ The `_archive/` location alone prevents auto-loading — no `.parked.md` suffix 
 4. `/fold:playtest` in run mode → verify improvements
 5. Fold again
 
+## Project persistence artifacts
+
+Projects using fold keep three durable files at the root:
+
+- **`TASKS.md`** — active work (mxit format)
+- **`PLAYTEST-RESULTS.md`** — one-line-per-run log of playtest sessions
+- **`GOTCHAS.md`** — debug traps that cost >5 min to figure out (append-only; never delete; supersede in place). Graduates to `pitfalls.md` once a trap bites ≥2 places.
+
+`TASKS.md` is session-scale; `GOTCHAS.md` is institutional memory. Format spec for GOTCHAS: `skills/fold:audit/gotchas.md`.
+
 ## Using individual skills
 
 Each skill works standalone. Use `fold:mxit` when you want just the task format without the full loop.

@@ -1,9 +1,16 @@
 ---
 name: fold:mxit:brief
-description: Concentrate one investigation, conversation, spike, or research thread into a single design doc with a clear recommendation that an executor can act on. **Single-topic, single-moment, points forward at execution** — NOT for tracking work over time (that's `/journal`). Use when the user says "fold:mxit:brief", "brief this", "write a brief doc", "write a brief", or "deep dive doc" — or after an investigation has concluded and the thinking needs to survive the conversation in a form a future agent can pick up and execute against.
+description: "Write a single-topic execution brief from an investigation or spike. Use when converged thinking needs to become a durable handoff document."
 ---
 
 # fold:mxit:brief — Boil It Down
+
+
+## Lookup Cues
+
+Former frontmatter detail, kept here so global lookup stays compact:
+
+> Concentrate one investigation, conversation, spike, or research thread into a single design doc with a clear recommendation that an executor can act on. **Single-topic, single-moment, points forward at execution** — NOT for tracking work over time (that's `/journal`). Use when the user says "fold:mxit:brief", "brief this", "write a brief doc", "write a brief", or "deep dive doc" — or after an investigation has concluded and the thinking needs to survive the conversation in a form a future agent can pick up and execute against.
 
 A brief concentrates messy inputs from **one** investigation — tweets, research notes, conversation history, debugging session, architecture spike — into a single design doc with a clear recommendation. The doc becomes the context for one task: "go implement what's in here."
 
@@ -91,6 +98,29 @@ Enough detail for an agent to execute: interface sketches, migration steps, key 
 - **abandoned** — investigation concluded the approach won't work. Keep for reference.
 
 There is no "in progress forever" state. A brief that won't converge is a journal in disguise.
+
+## Auditing stale briefs
+
+Briefs are frozen at write-time, so reality drifts away from them. When the pile gets noisy — recommendations that didn't pan out, code that went a different direction, executors who learned new things mid-build — audit rather than mutate. Two moves:
+
+**Annotate in frontmatter** when the brief is mostly right but has known holes:
+
+```markdown
+---
+status: ready
+correction: "Retrieval layer landed differently — see commit abc123. Sections 2-3 still accurate, section 4 (caching) stale."
+---
+```
+
+Use `correction:` for partial corrections (which sections still hold, which don't). Use `stale: true` or `incorrect: true` when the whole doc no longer matches reality but is worth keeping for context. Don't rewrite the body — the value is the snapshot of thinking at that moment plus the note about what changed.
+
+**Move to archive** when a brief is fully done or wrong enough to be noise:
+
+```
+.brief/_archive/old-retrieval-design.md
+```
+
+`.brief/_archive/` is the brief equivalent of `TASKS.done.md` — out of the live set, still grep-able, doesn't clutter the working folder. Archival is user-driven, not auto. If you're tempted to delete a brief, archive it instead — superseded briefs are useful context for future agents asking "why didn't we do X?"
 
 ## Link from TASKS
 

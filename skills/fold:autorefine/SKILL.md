@@ -1,9 +1,16 @@
 ---
 name: fold:autorefine
-description: Autonomous refinement loop — the "improve" facet of fold. Agent — agent and user agree on what "better" means, then the agent iterates (modify → compare → keep/discard → repeat) until quality converges. Learns across sessions via REFINE.md. Use when the user says "autorefine", "refine this", "make this better", "iterate on this", "keep improving", "optimize this", or wants an autonomous improvement loop on code, docs, skills, or any artifact.
+description: "Improve code, docs, skills, prompts, or other artifacts through an autonomous autorefine loop using scored rubrics or comparative checks."
 ---
 
 # autorefine — Autonomous Refinement Loop
+
+
+## Lookup Cues
+
+Former frontmatter detail, kept here so global lookup stays compact:
+
+> Autonomous refinement loop — the "improve" facet of fold. Agent — agent and user agree on what "better" means, then the agent iterates (modify → compare → keep/discard → repeat) until quality converges. Learns across sessions via REFINE.md. Use when the user says "autorefine", "refine this", "make this better", "iterate on this", "keep improving", "optimize this", or wants an autonomous improvement loop on code, docs, skills, or any artifact.
 
 Make something better through iteration. You and the user agree on what "better" means, then you loop: make one change, judge whether it helped, keep or discard, repeat.
 
@@ -275,3 +282,7 @@ The judge is always a fresh agent — no exceptions.
 - **Good for:** Skills, docs, prompts, config files, small focused code — anything where "quality" matters but is hard to pin down
 - **Good for:** When you know something could be better but can't articulate how — the interrogation forces clarity
 - **Not for:** Large codebases (scope too broad), quick one-off fixes (`/simplify`), purely numeric optimization (just run the benchmark directly)
+
+## Filing structural gripes as gotchas
+
+REFINE.md's "What didn't work" section is a private session log. If a discard reveals a *structural trap* (not just a bad attempt) — the kind of thing that cost you >5 minutes to diagnose and will bite again — promote it to the project's `GOTCHAS.md` as a durable entry. See `fold:audit/gotchas.md` for the format. The discard stays in REFINE.md; the rule lives in GOTCHAS.

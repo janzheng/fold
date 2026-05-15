@@ -1,9 +1,16 @@
 ---
 name: fold:mxit:explore
-description: Capture and explore ideas at three levels — silent spark drop (one-line stray thought, no session), quick explore (short note to EXPLORE.md), or full brainstorm session. Saves to EXPLORE.md / EXPLORE-{area}.md, promotes to TASKS family when ready. Use when the user says "spark this", "drop this", "park this idea", "stray thought", "have a thought", "save to explore", "note for later", "explore", "brainstorm", "what should we build", "zoom out", "PRD", "jobs to be done", "alternate paths", "career goals", "life planning", "coach me", or wants to capture an idea — from a one-line hunch to a full product spec.
+description: "Capture and develop ideas in EXPLORE files, from quick stray thoughts to brainstorms and product specs that may become tasks."
 ---
 
 # fold:mxit:explore — Capture, Explore, Brainstorm
+
+
+## Lookup Cues
+
+Former frontmatter detail, kept here so global lookup stays compact:
+
+> Capture and explore ideas at three levels — silent spark drop (one-line stray thought, no session), quick explore (short note to EXPLORE.md), or full brainstorm session. Saves to EXPLORE.md / EXPLORE-{area}.md, promotes to TASKS family when ready. Use when the user says "spark this", "drop this", "park this idea", "stray thought", "have a thought", "save to explore", "note for later", "explore", "brainstorm", "what should we build", "zoom out", "PRD", "jobs to be done", "alternate paths", "career goals", "life planning", "coach me", or wants to capture an idea — from a one-line hunch to a full product spec.
 
 Three modes from lightest to heaviest. **Default to the lightest mode that matches the user's intent. Never escalate to a session unless the user explicitly asks for one.** The cost of running an interrogation when they just wanted to drop a thought is high.
 

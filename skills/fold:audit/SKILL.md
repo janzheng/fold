@@ -1,9 +1,16 @@
 ---
 name: fold:audit
-description: Deep autonomous codebase audit — launch parallel agent waves to find race conditions, error swallowing, security issues, logic bugs, and wiring failures. Produces TASKS-AUDIT.md with prioritized findings for mxit. The "deep discover" facet of fold. Use when the user says "audit this", "find bugs", "scan for issues", "what's broken", "correctness sweep", "deep audit", "code audit", "fold:audit", or wants a comprehensive read-only codebase analysis.
+description: "Run a deep read-only codebase audit. Use to find race conditions, swallowed errors, security issues, logic bugs, and wiring failures."
 ---
 
 # fold:audit — Deep Parallel Codebase Audit
+
+
+## Lookup Cues
+
+Former frontmatter detail, kept here so global lookup stays compact:
+
+> Deep autonomous codebase audit — launch parallel agent waves to find race conditions, error swallowing, security issues, logic bugs, and wiring failures. Produces TASKS-AUDIT.md with prioritized findings for mxit. The "deep discover" facet of fold. Use when the user says "audit this", "find bugs", "scan for issues", "what's broken", "correctness sweep", "deep audit", "code audit", "fold:audit", or wants a comprehensive read-only codebase analysis.
 
 The **deep discover** facet of fold. Launches waves of parallel agents to read the entire codebase and catalog every correctness issue. **Read-only** — no fixes applied. All findings go into `TASKS-AUDIT.md`, which feeds directly into mxit for tracking and execution.
 
@@ -251,8 +258,15 @@ If continuing from a prior session:
 4. Plan the next wave targeting uncovered areas
 5. Continue with the full exclusion list + sequential IDs
 
+## Companion artifact: `GOTCHAS.md`
+
+`TASKS-AUDIT.md` is a one-time sweep. **`GOTCHAS.md` is the persistent residue of debugging** — the things that bit you in real work, written down so the next session doesn't pay the same tax. Same `Symptom / Why / Fix / Reference` shape as audit findings; lower bar (anything that cost >5 minutes to debug). When an audit finding later actually bites in production, file it as a gotcha referencing the original audit ID. When a gotcha bites a second place, graduate it to `pitfalls.md`.
+
+See `gotchas.md` (alongside this file) for the full pattern — format, graduation path, never-delete rule, indexing for large projects.
+
 ## See Also
 
+- `gotchas.md` — companion doc; the durable debug-trap log that lives in every project using fold
 - `fold:playtest:explore` — lighter-weight open-ended discovery (one agent, quick)
 - `fold:playtest:improve` — analyze→fix pipeline (use AFTER audit produces findings)
 - `fold:mxit` — track findings as tasks, coordinate fixes

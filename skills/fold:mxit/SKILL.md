@@ -1,9 +1,16 @@
 ---
 name: fold:mxit
-description: The complete mxit task system — set up TASKS.md, manage the TASKS family (TASKS-DESIGN.md, TASKS-MAP.md, TASKS-{area}.md), run the task runner, and coordinate multi-agent work. Markdown-native task lists with rich statuses, sub-items, tags, due dates, #needs dependencies, phased buildouts, decisions, risks, and agent coordination. The "track" facet of fold. Use when the user says "tasks", "todos", "mxit", "TASKS.md", "add a task", "mark done", "task list", "what's left to do", "set up tasks", "run tasks", "what's ready", "project map", "architecture map", "roadmap", "what blocks what", "dependencies", "vision", "decisions", "archive tasks", "clean up tasks", "garbage collect", "fold:mxit", or wants to track work items in a project.
+description: "Manage markdown-native project tasks with mxit: TASKS files, statuses, dependencies, maps, briefs, decisions, and multi-agent coordination."
 ---
 
 # fold:mxit — Task Tracking & Orchestration
+
+
+## Lookup Cues
+
+Former frontmatter detail, kept here so global lookup stays compact:
+
+> The complete mxit task system — set up TASKS.md, manage the TASKS family (TASKS-DESIGN.md, TASKS-MAP.md, TASKS-{area}.md), run the task runner, and coordinate multi-agent work. Markdown-native task lists with rich statuses, sub-items, tags, due dates, #needs dependencies, phased buildouts, decisions, risks, and agent coordination. The "track" facet of fold. Use when the user says "tasks", "todos", "mxit", "TASKS.md", "add a task", "mark done", "task list", "what's left to do", "set up tasks", "run tasks", "what's ready", "project map", "architecture map", "roadmap", "what blocks what", "dependencies", "vision", "decisions", "archive tasks", "clean up tasks", "garbage collect", "fold:mxit", or wants to track work items in a project.
 
 The **track** facet of fold. Set up and manage `TASKS.md` files, scale to the full TASKS family for bigger projects, and run the task lifecycle with multi-agent coordination.
 
@@ -609,6 +616,13 @@ The task is thin — the BRIEF doc has all the context. The agent reads the doc,
 - **abandoned** — investigation concluded that the approach won't work (keep for future reference)
 
 When the linked task ships, the BRIEF doc is archive. If thinking shifts, write a *new* brief and mark the old one `[abandoned: superseded by .brief/X.md]` — don't keep mutating one document.
+
+#### Auditing stale briefs
+
+Briefs are frozen at write-time, so reality drifts away from them. When the pile gets noisy, audit rather than mutate. Two moves:
+
+- **Annotate in frontmatter** for partial corrections — `correction: "section 4 stale, see commit abc123"` keeps the snapshot honest without rewriting the body. Use `stale: true` or `incorrect: true` when the whole doc no longer matches but is worth keeping for context.
+- **Move to `.brief/_archive/`** when a brief is fully done with or wrong enough to be noise. The archive is the brief equivalent of `TASKS.done.md` — out of the live set, still grep-able. User-driven, not auto. If tempted to delete, archive instead — superseded briefs answer "why didn't we do X?"
 
 #### When to write a BRIEF doc
 

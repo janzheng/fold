@@ -12,6 +12,8 @@ The repo has three things:
 
 The loop: playtest finds issues → mxit tracks them → autorefine improves the weakest parts → playtest again to verify.
 
+Projects using fold accumulate three persistent artifacts in their root: **`TASKS.md`** (active work, via mxit), **`PLAYTEST-RESULTS.md`** (one-line-per-run summary log), and **`GOTCHAS.md`** (durable debug-trap log — anything that cost you >5 minutes to figure out). The first two are session-scale; GOTCHAS is institutional memory. See `skills/fold:audit/gotchas.md` for the GOTCHAS format and graduation path.
+
 ## How to use
 
 ### The full fold loop
