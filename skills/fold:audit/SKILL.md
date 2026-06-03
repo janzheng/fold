@@ -21,7 +21,7 @@ The key insight: a single agent can't hold a large codebase in context. But 30-4
 > - `fold:playtest:run` = scripted playtest with checklist
 > - **`fold:audit`** = industrial-scale parallel discovery, structured waves, exhaustive
 > - `fold:playtest:improve` = analyze then fix (runs AFTER audit produces findings)
-> - `fold:mxit` = track the findings as tasks, coordinate fixes
+> - `fold:tasks` = track the findings as tasks, coordinate fixes
 
 ## Phase 1: Setup
 
@@ -218,7 +218,7 @@ When the audit is complete (all planned waves run, or user says stop):
 
 1. **Write a summary** at the top of TASKS-AUDIT.md — total findings, top themes, recommended fix order
 2. **The Fix-First List IS the task list** — it's already in mxit-compatible format (`- [ ]` / `- [!]`)
-3. **The user can run `fold:mxit:run`** to start working through fixes, or `fold:playtest:improve` to have agents fix findings automatically
+3. **The user can run `fold:run`** to start working through fixes, or `fold:playtest:improve` to have agents fix findings automatically
 4. **Tag audit findings** with `#audit` so they're distinguishable from manually-added tasks
 
 ## Key Principles
@@ -269,6 +269,6 @@ See `gotchas.md` (alongside this file) for the full pattern — format, graduati
 - `gotchas.md` — companion doc; the durable debug-trap log that lives in every project using fold
 - `fold:playtest:explore` — lighter-weight open-ended discovery (one agent, quick)
 - `fold:playtest:improve` — analyze→fix pipeline (use AFTER audit produces findings)
-- `fold:mxit` — track findings as tasks, coordinate fixes
-- `fold:mxit:run` — dispatch agents to work through the fix list
+- `fold:tasks` — track findings as tasks, coordinate fixes
+- `fold:run` — dispatch agents to work through the fix list
 - `fold:autorefine` — iterative improvement loop (for refining a single artifact, not codebase-wide)

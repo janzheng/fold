@@ -14,7 +14,7 @@ The loop: playtest finds issues → mxit tracks them → autorefine improves the
 
 Projects using fold accumulate three persistent artifacts in their root: **`TASKS.md`** (active work, via mxit), **`PLAYTEST-RESULTS.md`** (one-line-per-run summary log), and **`GOTCHAS.md`** (durable debug-trap log — anything that cost you >5 minutes to figure out). The first two are session-scale; GOTCHAS is institutional memory. See `skills/fold:audit/gotchas.md` for the GOTCHAS format and graduation path.
 
-Other artifact folders accumulate as projects grow: `.journal/` (lab notebook), `.brief/` (converged design docs), `.notes/` (atemporal findings), `.ticket/` (delegation slips), `EXPLORE.md` (sketchbook), and **`sops/`** (multi-step operating procedures humans walk through — the thing skills *can't* be, since skills are agent-triggerable capabilities). See `skills/fold:mxit/SKILL.md` for the full artifact set.
+Other artifact folders accumulate as projects grow: `.journal/` (lab notebook), `.brief/` (converged design docs), `.notes/` (atemporal findings), `.ticket/` (delegation slips), `EXPLORE.md` (sketchbook), and **`sops/`** (multi-step operating procedures humans walk through — the thing skills *can't* be, since skills are agent-triggerable capabilities). See `skills/fold:tasks/SKILL.md` for the full artifact set.
 
 ## How to use
 
@@ -115,10 +115,10 @@ fold/
     ├── fold:11star/       # UX 11-star rating + levelling
     ├── fold:audit/        # Read-only deep codebase audit
     ├── fold:autorefine/   # Autonomous refinement loop
-    ├── fold:mxit/         # Task format and tracking
-    ├── fold:mxit:brief/   # Single-topic execution brief
-    ├── fold:mxit:explore/ # EXPLORE files (ideas → brainstorms)
-    ├── fold:mxit:run/     # Task lifecycle runner
+    ├── fold:tasks/         # Task format and tracking
+    ├── fold:brief/   # Single-topic execution brief
+    ├── fold:explore/ # EXPLORE files (ideas → brainstorms)
+    ├── fold:run/     # Task lifecycle runner
     ├── fold:playtest/     # Playtest umbrella (write + run + explore + improve modes)
     └── _archive/          # Unregistered-from-hub skills, kept for revivability — see "Skills" section below
 ```
@@ -163,10 +163,10 @@ Each skill is a `SKILL.md` file that teaches an AI agent a capability. The live 
 | `fold:11star` | Rate + improve UX on the 11-star scale |
 | `fold:audit` | Deep read-only codebase audit (race conditions, swallowed errors, security, wiring) |
 | `fold:autorefine` | Autonomous refinement loop with rubrics or comparative checks |
-| `fold:mxit` | Markdown-native task tracking — statuses, tags, dependencies, multi-agent |
-| `fold:mxit:brief` | Single-topic execution brief from investigation → handoff |
-| `fold:mxit:explore` | EXPLORE files — stray thoughts → brainstorms → specs |
-| `fold:mxit:run` | Task lifecycle runner (ready → claim → done/fail) |
+| `fold:tasks` | Markdown-native task tracking — statuses, tags, dependencies, multi-agent (aka mxit) |
+| `fold:brief` | Single-topic execution brief from investigation → handoff |
+| `fold:explore` | EXPLORE files — stray thoughts → brainstorms → specs |
+| `fold:run` | Task lifecycle runner (ready → claim → done/fail) |
 | `fold:playtest` | Playtest umbrella — `run` (directed), `explore` (fresh eyes / adversarial), `improve` (analyze → fix) |
 
 ### Archived skills — `skills/_archive/`

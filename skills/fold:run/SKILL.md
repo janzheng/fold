@@ -1,16 +1,16 @@
 ---
-name: fold:mxit:run
+name: fold:run
 description: "Run mxit tasks from TASKS files: find ready work, execute or dispatch agents, review results, and mark task status."
 ---
 
-# mxit:run — Execute Tasks
+# fold:run — Execute Tasks
 
 
 ## Lookup Cues
 
 Former frontmatter detail, kept here so global lookup stays compact:
 
-> Run mxit tasks — find ready work, dispatch agents (sequentially or fanned out in worktrees), review before marking done. Use when the user says "run tasks", "what's ready", "do the next task", "fan out", "dispatch agents", "mxit:run", or wants to execute tasks from a TASKS file.
+> Run mxit tasks — find ready work, dispatch agents (sequentially or fanned out in worktrees), review before marking done. Use when the user says "run tasks", "what's ready", "do the next task", "fan out", "dispatch agents", "fold:run", or wants to execute tasks from a TASKS file.
 
 You ARE the runner. Read TASKS.md, find what's ready, do the work (or fan out subagents), review, mark done. No CLI needed — you orchestrate directly.
 

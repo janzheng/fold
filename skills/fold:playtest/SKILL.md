@@ -14,7 +14,7 @@ Use when the user says "playtest this", "run playtest", "execute playtest", "try
 
 ## Pairs with
 
-- `/fold:mxit` — discoveries get emitted as mxit tasks with `#found`
+- `/fold:tasks` — discoveries get emitted as mxit tasks with `#found`
 - `/fold:autorefine` — too-big issues get emitted as mxit tasks with `#found`, then refined
 - `/fold` — the full loop: discover → track → improve → fold again
 
@@ -475,7 +475,7 @@ Small findings stay in playtest results (resolution brackets). Findings too big 
 - [ ] CLI piping assumes CSV but list outputs TSV — design decision needed #found #design
 ```
 
-Tag with `#found` so it's traceable back to the playtest. The playtest is for discovery; `TASKS.md` is for follow-up. See `/fold:mxit` for the task system.
+Tag with `#found` so it's traceable back to the playtest. The playtest is for discovery; `TASKS.md` is for follow-up. See `/fold:tasks` for the task system.
 
 **For `confused` / `fail` findings with a non-obvious root cause** — the kind that cost you >5 minutes to diagnose — also file as a durable entry in the project's `GOTCHAS.md`. The playtest result captures *that it happened*; the gotcha captures *the rule so it doesn't bite again*. See `fold:audit/gotchas.md` for the format.
 

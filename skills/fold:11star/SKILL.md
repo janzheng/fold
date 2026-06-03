@@ -108,7 +108,7 @@ Write a concrete path from current to target star level:
 11star assessment is a natural input to the fold loop:
 
 1. **fold:11star** rates the current state → produces gap analysis
-2. **fold:mxit** turns gaps into tracked tasks
+2. **fold:tasks** turns gaps into tracked tasks
 3. **fold:playtest** validates whether changes actually moved the needle
 4. **fold:11star** re-rates → did we reach the target?
 

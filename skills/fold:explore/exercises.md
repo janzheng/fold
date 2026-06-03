@@ -1,6 +1,6 @@
 # Brainstorm Exercises
 
-Reference for `fold:mxit:explore` Mode 3. Pick one or combine. The agent runs the exercise with the user, then distills the output into mxit format.
+Reference for `fold:explore` Mode 3. Pick one or combine. The agent runs the exercise with the user, then distills the output into mxit format.
 
 ## 1. Five Whys
 

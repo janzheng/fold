@@ -24,10 +24,10 @@ fold/
 │   ├── fold:11star/       # UX 11-star rating + levelling
 │   ├── fold:audit/        # Read-only deep codebase audit
 │   ├── fold:autorefine/   # Autonomous refinement loop
-│   ├── fold:mxit/         # Task format + tracking
-│   ├── fold:mxit:brief/   # Single-topic execution brief
-│   ├── fold:mxit:explore/ # EXPLORE files (ideas → brainstorms → specs)
-│   ├── fold:mxit:run/     # Task lifecycle runner
+│   ├── fold:tasks/        # Task format + tracking (aka mxit)
+│   ├── fold:brief/   # Single-topic execution brief
+│   ├── fold:explore/ # EXPLORE files (ideas → brainstorms → specs)
+│   ├── fold:run/     # Task lifecycle runner
 │   ├── fold:playtest/     # Playtest umbrella — write + run + explore + improve modes
 │   └── _archive/          # Unregistered-from-hub skills, kept for revivability — see "Archived skills" below
 ```
@@ -39,10 +39,10 @@ fold/
 | `fold:11star` | Rate + improve product UX on the 11-star scale |
 | `fold:audit` | Deep read-only codebase audit — race conditions, swallowed errors, security, wiring failures |
 | `fold:autorefine` | Iterative improvement — rubric negotiation, modify → judge → keep/discard |
-| `fold:mxit` | Track work as markdown checklists — statuses, tags, due dates, agent coordination |
-| `fold:mxit:brief` | Single-topic execution brief from investigation → handoff |
-| `fold:mxit:explore` | EXPLORE files — stray thoughts → brainstorms → specs |
-| `fold:mxit:run` | Task lifecycle runner — recover, ready, claim, done, fail |
+| `fold:tasks` | Track work as markdown checklists — statuses, tags, due dates, agent coordination (aka mxit) |
+| `fold:brief` | Single-topic execution brief from investigation → handoff |
+| `fold:explore` | EXPLORE files — stray thoughts → brainstorms → specs |
+| `fold:run` | Task lifecycle runner — recover, ready, claim, done, fail |
 | `fold:playtest` | Playtest umbrella — `run` (directed), `explore` (fresh eyes / adversarial), `improve` (analyze → fix) |
 
 ## Archived skills — `skills/_archive/`
@@ -74,7 +74,7 @@ Projects using fold keep three durable files at the root:
 
 ## Using individual skills
 
-Each skill works standalone. Use `fold:mxit` when you want just the task format without the full loop.
+Each skill works standalone. Use `fold:tasks` (the renamed mxit) when you want just the task format without the full loop.
 
 ## mxit CLI
 
