@@ -272,8 +272,9 @@ For larger projects, TASKS.md alone gets overwhelmed. The mxit format scales wit
 ```
 TASKS-DESIGN.md     — why + how: mission, design, goals, decisions
 TASKS-MAP.md        — what: architecture tree + phased buildout
-.ticket/{name}.md    — delegation: scope, contracts, acceptance for a work chunk
+.ticket/{name}.md   — delegation: scope, contracts, acceptance for a work chunk
 .brief/{name}.md    — investigation: research boiled down to a recommendation
+sops/{name}.md      — operating procedures: multi-step workflows humans walk through
 TASKS-{area}.md     — deep backlog per area (e.g. TASKS-ui.md)
 TASKS.md            — now: the fridge list, what you're doing today
 ```
@@ -724,6 +725,119 @@ Four fields + a post-hoc section. That's it.
 
 A BRIEF might feed into a TICKET. The BRIEF figures out the approach, the TICKET packages the delegation context. But either can exist without the other.
 
+### SOPs — Operating Procedures
+
+When a multi-step procedure needs to happen the same way every time, write an **SOP** (standard operating procedure). SOPs are the artifacts skills *can't* be — workflows that involve humans, sign-off gates, real-world actions, or multi-actor coordination. Skills are agent-triggerable capabilities with a clear harness; SOPs are written instructions humans (and sometimes agents at points) walk through. The two are different shapes for different jobs — an SOP that's fully automatable should become a skill; a skill that needs human gates can't.
+
+#### Where they live
+
+```
+sops/                       — folder, visible (not dotfolder — operational reference)
+sops/<procedure-name>.md    — one file per procedure
+```
+
+Visible folder, not a dotfolder. The other capture artifacts (`.journal/`, `.brief/`, `.notes/`, `.ticket/`) stay backstage; SOPs are front-of-house reference material humans actually consult.
+
+#### Shape
+
+```markdown
+---
+date: YYYY-MM-DD
+type: sop
+tldr: "One sentence — what this procedure does."
+sources:
+  - .journal/...   (where the rationale lives)
+  - .brief/...     (if there's a design doc behind it)
+---
+
+# <Procedure name>
+
+## Purpose
+
+What this exists to do. One paragraph.
+
+## When to use
+
+The triggers — what situation calls for this SOP.
+
+## Steps
+
+1. **<Who>** — <action> — <what to verify before moving on>
+2. **<Who>** — <...>
+
+Each step names who does it (human / agent / either) and what to verify before moving on.
+
+## Verification
+
+How you know it worked end-to-end.
+
+## Common mistakes
+
+- <Wrong-looking-right path 1>
+- <Wrong-looking-right path 2>
+```
+
+#### Example (toy)
+
+A deliberately silly example, to show the shape — not a real fold procedure:
+
+```markdown
+---
+date: 2026-06-03
+type: sop
+tldr: "Restock the office coffee bar before it runs out mid-week."
+---
+
+# Restock the Coffee Bar
+
+## Purpose
+
+Keep the coffee bar stocked so the team doesn't run out of beans, milk, or filters mid-week.
+
+## When to use
+
+Monday morning, or whenever the threshold sheet on the pantry door shows any item below minimum.
+
+## Steps
+
+1. **Human** — check the threshold sheet against actual pantry counts (beans, oat milk, filters).
+2. **Human** — order replenishment via the procurement portal. Confirm delivery date is < 3 days out.
+3. **Agent (optional)** — append the order details to `.journal/YYYY-MM-DD-coffee-restock.md` so the brand and quantity are recorded.
+4. **Human** — when delivery arrives, restock and reset the threshold sheet.
+
+## Verification
+
+Threshold sheet shows current counts above minimums. Receipt filed.
+
+## Common mistakes
+
+- Ordering before checking what's already in the pantry — leads to over-stock and stale beans.
+- Skipping the journal log — next month nobody remembers what brand we switched to or why.
+```
+
+#### When to write a SOP
+
+- A procedure has to happen the same way every time (releases, on-call handoffs, contractor onboarding, anything with sign-off gates)
+- The procedure involves humans, real-world actions, or external systems an agent can't fully drive
+- The cost of getting a step wrong is high enough that the wrong-looking-right paths need to be written down
+
+#### When NOT to write one
+
+- If a procedure is fully automatable and agent-triggerable, write a **skill**, not an SOP
+- If the procedure is a one-off, write a **journal entry** — SOPs are for repeated work
+- If the doc is mostly *why* and not *steps*, write a **brief**
+
+#### SOPs vs other artifacts
+
+| | BRIEF | TICKET | SOP |
+|---|---|---|---|
+| **Job** | Investigation → recommendation | Delegation → safe execution | Repeatable operation → done correctly |
+| **Lifecycle** | Frozen, archived once executed | Written once, deviated post-hoc | Living — updated as the procedure evolves |
+| **Audience** | Executor (agent or human) | Subagent or new contributor | Anyone running the procedure |
+| **Triggerable?** | No | No | No — humans walk through it |
+
+SOPs are *living* documents — when the procedure changes, the SOP gets edited in place. Unlike briefs (frozen snapshots) or tickets (written once, deviated post-hoc), an SOP updates as the world changes around it.
+
 ### Rules for the family
 
 1. **TASKS-DESIGN.md** = source of truth for **why + how** — mission, system design, goals, decisions & risks
@@ -741,6 +855,7 @@ A BRIEF might feed into a TICKET. The BRIEF figures out the approach, the TICKET
 13. **Tickets are written once, deviated post-hoc** — the deviations section is the value
 14. **Area files are backlogs** — comprehensive, not urgent
 15. **TASKS.md updates daily** — the working surface
+16. **SOPs are living** — when the procedure changes, edit the SOP in place; unlike briefs (frozen) or tickets (deviated post-hoc), SOPs track current reality
 
 ### When to scale up
 

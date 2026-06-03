@@ -14,6 +14,8 @@ The loop: playtest finds issues → mxit tracks them → autorefine improves the
 
 Projects using fold accumulate three persistent artifacts in their root: **`TASKS.md`** (active work, via mxit), **`PLAYTEST-RESULTS.md`** (one-line-per-run summary log), and **`GOTCHAS.md`** (durable debug-trap log — anything that cost you >5 minutes to figure out). The first two are session-scale; GOTCHAS is institutional memory. See `skills/fold:audit/gotchas.md` for the GOTCHAS format and graduation path.
 
+Other artifact folders accumulate as projects grow: `.journal/` (lab notebook), `.brief/` (converged design docs), `.notes/` (atemporal findings), `.ticket/` (delegation slips), `EXPLORE.md` (sketchbook), and **`sops/`** (multi-step operating procedures humans walk through — the thing skills *can't* be, since skills are agent-triggerable capabilities). See `skills/fold:mxit/SKILL.md` for the full artifact set.
+
 ## How to use
 
 ### The full fold loop
