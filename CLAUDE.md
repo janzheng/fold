@@ -23,6 +23,7 @@ fold/
 ├── skills/                # All fold skills (canonical)
 │   ├── fold:11star/       # UX 11-star rating + levelling
 │   ├── fold:audit/        # Read-only deep codebase audit
+│   ├── fold:debug/        # Root-cause one known bug, then fix
 │   ├── fold:autorefine/   # Autonomous refinement loop
 │   ├── fold:tasks/        # Task format + tracking (aka mxit)
 │   ├── fold:brief/   # Single-topic execution brief
@@ -38,6 +39,7 @@ fold/
 |-------|-------------|
 | `fold:11star` | Rate + improve product UX on the 11-star scale |
 | `fold:audit` | Deep read-only codebase audit — race conditions, swallowed errors, security, wiring failures |
+| `fold:debug` | Root-cause one known bug — reproduce, trace the causal chain, confirm before fixing, fix test-first |
 | `fold:autorefine` | Iterative improvement — rubric negotiation, modify → judge → keep/discard |
 | `fold:tasks` | Track work as markdown checklists — statuses, tags, due dates, agent coordination (aka mxit) |
 | `fold:brief` | Single-topic execution brief from investigation → handoff |

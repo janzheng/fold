@@ -114,6 +114,7 @@ fold/
 └── skills/                # Claude Code skills (canonical)
     ├── fold:11star/       # UX 11-star rating + levelling
     ├── fold:audit/        # Read-only deep codebase audit
+    ├── fold:debug/        # Root-cause one known bug, then fix
     ├── fold:autorefine/   # Autonomous refinement loop
     ├── fold:tasks/         # Task format and tracking
     ├── fold:brief/   # Single-topic execution brief
@@ -162,6 +163,7 @@ Each skill is a `SKILL.md` file that teaches an AI agent a capability. The live 
 |-------|---------|
 | `fold:11star` | Rate + improve UX on the 11-star scale |
 | `fold:audit` | Deep read-only codebase audit (race conditions, swallowed errors, security, wiring) |
+| `fold:debug` | Root-cause one known bug — reproduce, trace the causal chain, confirm, fix test-first |
 | `fold:autorefine` | Autonomous refinement loop with rubrics or comparative checks |
 | `fold:tasks` | Markdown-native task tracking — statuses, tags, dependencies, multi-agent (aka mxit) |
 | `fold:brief` | Single-topic execution brief from investigation → handoff |

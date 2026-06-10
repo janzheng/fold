@@ -14,7 +14,12 @@ Former frontmatter detail, kept here so global lookup stays compact:
 
 The **deep discover** facet of fold. Launches waves of parallel agents to read the entire codebase and catalog every correctness issue. **Read-only** — no fixes applied. All findings go into `TASKS-AUDIT.md`, which feeds directly into mxit for tracking and execution.
 
-The key insight: a single agent can't hold a large codebase in context. But 30-40 focused agents, each reading 5-10 files deeply, can cover everything.
+Two reasons this is subagent-native, not optional:
+
+1. **Context capacity** — a single agent can't hold a large codebase in context. But 30-40 focused agents, each reading 5-10 files deeply, can cover everything.
+2. **Fresh eyes, no self-regard** — the agent that just wrote the code is the worst auditor of it. It comes in already convinced the code is correct, skims what it "knows" it got right, and inherits every blind spot from the build. A subagent starts cold with no sunk cost — it reads what's actually there, not what the author meant.
+
+**Whenever the harness supports subagent dispatch, the audit MUST run in subagents — never inline in the session that built the code.** The fresh-context isolation is the point, not just the parallelism. Fall back to sequential focused passes (one subsystem at a time, cold framing each pass) only when no subagent primitive exists.
 
 > **Relationship to other fold skills:**
 > - `fold:playtest:explore` = one agent, open-ended walkthrough, quick
@@ -124,7 +129,9 @@ Shift from subsystem-based to pattern-based. Each agent greps for a specific ant
 
 ### Launch agents in parallel
 
-Each wave launches 3-4 agents simultaneously using the Agent tool. **All agents in a wave run in parallel** — use a single message with multiple Agent tool calls.
+Each wave launches 3-4 agents simultaneously using the Agent tool. **All agents in a wave run in parallel** — use a single message with multiple Agent tool calls. Dispatching subagents is **mandatory when the harness has a subagent primitive** (see "Two reasons this is subagent-native" above) — the auditor must not be the agent that wrote the code.
+
+**No subagent primitive in this harness?** Degrade gracefully — run the waves sequentially as focused single-agent passes, one subsystem or pattern at a time, deliberately re-reading from a cold framing each pass rather than carrying forward the previous pass's assumptions. Slower and weaker on the self-regard axis, but still better than one monolithic read.
 
 ### Subsystem Agent Prompt Template
 
