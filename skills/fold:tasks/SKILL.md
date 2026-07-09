@@ -568,19 +568,21 @@ BRIEF docs are the bridge between "we need to figure this out" and "go do the th
 #### Where they live
 
 ```
-.brief/                         — folder for projects with multiple deep dives
-.brief/unified-retrieval.md     — one doc per investigation
-.brief/auth-race-condition.md
+.brief/                              — folder for projects with multiple deep dives
+.brief/unified-retrieval.md          — one doc per investigation, still live
+.brief/auth-race-condition.done.md   — shipped; renamed in place
 ```
 
 Always use the dotfolder — keeps project root clean. No date prefix on filenames; if you're tempted to date a brief, it should be a journal entry.
+
+Shipped briefs get a `.done.md` suffix, renamed in place — same folder, same slug, mirroring `TASKS.done.md`. `ls .brief/*.md | grep -v '\.done\.md'` is the live set.
 
 #### Shape
 
 ```markdown
 # Unified Retrieval Layer
 
-**Status:** ready | wip | abandoned
+**Status:** ready | wip | done | abandoned
 **From:** conversation / playtest / debugging / spike
 **Task:** `-> TASKS.md` (link to the task that will implement this)
 
@@ -605,25 +607,27 @@ Enough detail that an agent can execute without the original conversation contex
 
 ```markdown
 - [ ] Unified retrieval layer `-> .brief/unified-retrieval.md` #arch
-- [ ] Fix auth race condition `-> .brief/auth-race-condition.md` #bug
+- [x] Fix auth race condition `-> .brief/auth-race-condition.done.md` #bug
 ```
 
-The task is thin — the BRIEF doc has all the context. The agent reads the doc, then implements.
+The task is thin — the BRIEF doc has all the context. The agent reads the doc, then implements. When the task ships and the brief is renamed, fix the link in the same commit.
 
 #### Status lifecycle (one-way, bounded)
 
 - **wip** — actively writing, not yet ready to hand off. Should resolve in days, not weeks. If `wip` lingers, the brief was the wrong shape — switch to journal entries.
 - **ready** — recommendation is clear, task can be picked up
+- **done** — the work shipped; rename the file to `<slug>.done.md`
 - **abandoned** — investigation concluded that the approach won't work (keep for future reference)
 
-When the linked task ships, the BRIEF doc is archive. If thinking shifts, write a *new* brief and mark the old one `[abandoned: superseded by .brief/X.md]` — don't keep mutating one document.
+When the linked task ships, rename the brief to `.done.md`. If thinking shifts, write a *new* brief and mark the old one `[abandoned: superseded by .brief/X.md]` — don't keep mutating one document.
 
 #### Auditing stale briefs
 
-Briefs are frozen at write-time, so reality drifts away from them. When the pile gets noisy, audit rather than mutate. Two moves:
+Briefs are frozen at write-time, so reality drifts away from them. When the pile gets noisy, audit rather than mutate. Three moves:
 
+- **Rename to `.done.md`** when the brief's work shipped — `git mv .brief/x.md .brief/x.done.md`, set `Status: done`, update the `-> .brief/x.md` link in TASKS. The filename is the durable signal; it survives grep and `ls` without opening the doc. Done briefs stay in `.brief/` — they're still the best answer to "why is this code shaped like this?"
 - **Annotate in frontmatter** for partial corrections — `correction: "section 4 stale, see commit abc123"` keeps the snapshot honest without rewriting the body. Use `stale: true` or `incorrect: true` when the whole doc no longer matches but is worth keeping for context.
-- **Move to `.brief/_archive/`** when a brief is fully done with or wrong enough to be noise. The archive is the brief equivalent of `TASKS.done.md` — out of the live set, still grep-able. User-driven, not auto. If tempted to delete, archive instead — superseded briefs answer "why didn't we do X?"
+- **Move to `.brief/_archive/`** when a brief is wrong enough to be noise — superseded, or describing a design the code never took. Not for briefs that succeeded; those get `.done.md` and stay put. User-driven, not auto. If tempted to delete, archive instead — superseded briefs answer "why didn't we do X?"
 
 #### When to write a BRIEF doc
 
@@ -651,7 +655,7 @@ Briefs are frozen at write-time, so reality drifts away from them. When the pile
 | **Has a recommendation** | No, multiple paths | No, just observations | Yes, one |
 | **Audience** | Self / collaborator brainstorming | Future-you | Executor (agent, teammate, future-you) |
 | **Lives in** | `EXPLORE-{topic}.md` | `.journal/YYYY-MM-DD-<slug>.md` | `.brief/<slug>.md` |
-| **Lifecycle** | Promote to TASKS or DESIGN | Append-only | Archive once executed |
+| **Lifecycle** | Promote to TASKS or DESIGN | Append-only | Rename to `.done.md` once executed |
 
 Pipeline: EXPLORE narrows down speculation → JOURNAL captures the thinking and decisions over time → BRIEF concentrates a converged investigation into something an executor can run with.
 
