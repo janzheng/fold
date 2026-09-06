@@ -1,9 +1,9 @@
 ---
-name: fold:explore
+name: proj:explore
 description: "Capture and develop ideas in EXPLORE files, from quick stray thoughts to brainstorms and product specs that may become tasks."
 ---
 
-# fold:explore — Capture, Explore, Brainstorm
+# proj:explore — Capture, Explore, Brainstorm
 
 
 ## Lookup Cues
@@ -14,7 +14,10 @@ Former frontmatter detail, kept here so global lookup stays compact:
 
 Three modes from lightest to heaviest. **Default to the lightest mode that matches the user's intent. Never escalate to a session unless the user explicitly asks for one.** The cost of running an interrogation when they just wanted to drop a thought is high.
 
-**This skill is for thinking, not implementing.** You may read files and investigate code, but never write code or implement features here. If the user wants to implement, remind them to start `fold:tasks:change` or add to TASKS.md.
+Brainstorm naturally; this skill is primarily for preserving uncommitted ideas.
+Do not require a command or an exercise for ordinary discussion. Save a short
+idea when requested or useful. When the user commits to implementation, follow
+that request directly or use `proj:tasks`; no separate command is required.
 
 ## Mode 1 — Spark drop (DEFAULT)
 
@@ -88,7 +91,7 @@ EXPLORE → TASKS is one-way. Don't demote committed tasks back; use `[~] [defer
 
 ### When EXPLORE leads to BRIEF
 
-If exploration surfaces "we should do X" but X needs investigation before it can become tasks, that's a BRIEF doc — see `/fold:brief`.
+If exploration surfaces "we should do X" but X needs investigation before it can become tasks, that's a BRIEF doc — see `/proj:brief`.
 
 EXPLORE asks "should we?" — BRIEF answers "here's how."
 

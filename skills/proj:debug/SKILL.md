@@ -1,23 +1,23 @@
 ---
-name: fold:debug
-description: "Find the root cause of a specific known bug, then optionally fix it — reproduce, trace the causal chain to where valid state first went wrong, confirm the whole chain before touching code, fix test-first and minimal. The targeted root-cause facet of fold (vs fold:audit's broad sweep for unknown bugs). Use when the user says 'debug this', 'why is this failing', 'fix this bug', 'trace this error', 'find the root cause', 'what's causing X', 'this is broken', 'it worked before', 'keeps failing', 'I'm stuck on', or pastes a stack trace, error message, or failing test."
+name: proj:debug
+description: "Find the root cause of a specific known bug, then optionally fix it — reproduce, trace the causal chain to where valid state first went wrong, confirm the whole chain before touching code, fix test-first and minimal. The targeted root-cause facet of fold (vs proj:audit's broad sweep for unknown bugs). Use when the user says 'debug this', 'why is this failing', 'fix this bug', 'trace this error', 'find the root cause', 'what's causing X', 'this is broken', 'it worked before', 'keeps failing', 'I'm stuck on', or pastes a stack trace, error message, or failing test."
 ---
 
-# fold:debug — Root-Cause a Known Bug
+# proj:debug — Root-Cause a Known Bug
 
 ## Lookup Cues
 
 Former frontmatter detail, kept here so global lookup stays compact:
 
-> Systematically find the root cause of one specific bug and optionally fix it — reproduce, trace the causal chain backward to where valid state first became invalid, confirm the whole chain before fixing, then fix test-first and minimal. The **targeted** discover facet of fold — one known-broken thing traced to ground — as opposed to fold:audit's broad sweep for unknown bugs. Use when the user says "debug this", "why is this failing", "fix this bug", "trace this error", "find the root cause", "what's causing X", "this is broken", "it worked before", "keeps failing", "I'm stuck on", or pastes a stack trace, error message, or failing test.
+> Systematically find the root cause of one specific bug and optionally fix it — reproduce, trace the causal chain backward to where valid state first became invalid, confirm the whole chain before fixing, then fix test-first and minimal. The **targeted** discover facet of fold — one known-broken thing traced to ground — as opposed to proj:audit's broad sweep for unknown bugs. Use when the user says "debug this", "why is this failing", "fix this bug", "trace this error", "find the root cause", "what's causing X", "this is broken", "it worked before", "keeps failing", "I'm stuck on", or pastes a stack trace, error message, or failing test.
 
-**This skill finds WHY one specific thing is broken.** It's the opposite shape from `fold:audit` (which sweeps for *unknown* bugs across a whole codebase). Here you start with one symptom and trace it to its origin.
+**This skill finds WHY one specific thing is broken.** It's the opposite shape from `proj:audit` (which sweeps for *unknown* bugs across a whole codebase). Here you start with one symptom and trace it to its origin.
 
 > **Where this sits in fold's discover facet:**
-> - `fold:audit` = broad parallel sweep, finds *unknown* bugs, read-only
-> - `fold:playtest` = exercise the product, surface what's weird or broken
-> - **`fold:debug`** = one *known* symptom, traced to root cause, then fixed
-> - `fold:tasks` = track a deferred fix as a task; `GOTCHAS.md` = record the trap so it doesn't bite twice
+> - `proj:audit` = broad parallel sweep, finds *unknown* bugs, read-only
+> - `proj:playtest` = exercise the product, surface what's weird or broken
+> - **`proj:debug`** = one *known* symptom, traced to root cause, then fixed
+> - `proj:tasks` = track a deferred fix as a task; `GOTCHAS.md` = record the trap so it doesn't bite twice
 
 ## The four rules
 
@@ -90,17 +90,17 @@ Test-first:
 
 A confirmed root cause is durable knowledge. Route it:
 
-- **`GOTCHAS.md`** — default for any trap that cost >5 min. Same `Symptom / Why / Fix / Reference` shape `fold:audit` uses. This is the temporal-boundary payoff: future-you hits the symptom and reads the answer instead of re-debugging.
-- **`/fold:note`** — when the finding is an atemporal truth worth grepping (`X.foo()` returns `T | undefined` when Y, not just `T`).
-- **`/fold:journal`** — when the investigation was cross-cutting, or the *diagnostic path* itself was non-obvious and worth narrating.
-- **`TASKS.md`** — if you stopped at diagnosis, file the fix as a task with `#bug` (see `/fold:tasks`).
+- **`GOTCHAS.md`** — default for any trap that cost >5 min. Same `Symptom / Why / Fix / Reference` shape `proj:audit` uses. This is the temporal-boundary payoff: future-you hits the symptom and reads the answer instead of re-debugging.
+- **`/proj:note`** — when the finding is an atemporal truth worth grepping (`X.foo()` returns `T | undefined` when Y, not just `T`).
+- **`/proj:journal`** — when the investigation was cross-cutting, or the *diagnostic path* itself was non-obvious and worth narrating.
+- **`TASKS.md`** — if you stopped at diagnosis, file the fix as a task with `#bug` (see `/proj:tasks`).
 - When a gotcha bites a **second** place, graduate it to `pitfalls.md`.
 
 Skip capture for mechanical one-offs with no generalizable lesson — don't clutter `GOTCHAS.md` with "fixed a typo."
 
 ## Fresh eyes: dispatch subagents when stuck
 
-Same principle as `fold:audit` — the agent holding the whole session is biased by everything it's already concluded. When hypotheses are bottlenecked across **independent** subsystems, dispatch read-only subagents in parallel, each with one explicit hypothesis and a structured evidence-return format. No code edits by subagents. Skip when hypotheses depend on each other's outcomes. No subagent primitive in the harness? Run the probes sequentially in ranked order — it's a latency optimization, not a correctness requirement.
+Same principle as `proj:audit` — the agent holding the whole session is biased by everything it's already concluded. When hypotheses are bottlenecked across **independent** subsystems, dispatch read-only subagents in parallel, each with one explicit hypothesis and a structured evidence-return format. No code edits by subagents. Skip when hypotheses depend on each other's outcomes. No subagent primitive in the harness? Run the probes sequentially in ranked order — it's a latency optimization, not a correctness requirement.
 
 ## Smart escalation — when 2-3 hypotheses die
 
@@ -108,14 +108,14 @@ Don't guess a fourth. Diagnose the *pattern*:
 
 | Pattern | What it means | Next move |
 |---|---|---|
-| Hypotheses point at different subsystems | A design problem, not a localized bug | Surface it → `/fold:explore` |
+| Hypotheses point at different subsystems | A design problem, not a localized bug | Surface it → `/proj:explore` |
 | Evidence contradicts itself | Your mental model of the code is wrong | Re-read the path with no assumptions |
 | Works locally, fails in CI/prod | Environment, not logic | Focus on env, config, deps, timing, build artifacts |
 | Fix works but the prediction was wrong | Symptom patch — real cause still live | Keep tracing |
 
 ## When the bug is really a design problem
 
-Sometimes tracing reveals the bug can't be cleanly fixed inside the current design — the responsibility lives in the wrong place, the spec itself is wrong, or every fix is a workaround. That's not a debug anymore; surface it and route to `/fold:explore` (or write a `/fold:brief` if the redesign needs investigation first). Size alone doesn't qualify — a big bug with a clear fix is still a fix.
+Sometimes tracing reveals the bug can't be cleanly fixed inside the current design — the responsibility lives in the wrong place, the spec itself is wrong, or every fix is a workaround. That's not a debug anymore; surface it and route to `/proj:explore` (or write a `/proj:brief` if the redesign needs investigation first). Size alone doesn't qualify — a big bug with a clear fix is still a fix.
 
 ## What NOT to do
 
@@ -128,8 +128,8 @@ Sometimes tracing reveals the bug can't be cleanly fixed inside the current desi
 
 ## See also
 
-- `/fold:audit` — the broad-sweep sibling: parallel waves finding *unknown* bugs (this skill traces *one known* one). Its `gotchas.md` holds the `GOTCHAS.md` format reference.
-- `/fold:playtest` — exercise the product to surface what's broken in the first place
-- `/fold:tasks` — track a deferred fix as a `#bug` task
-- `/fold:note` · `/fold:journal` — where confirmed findings land
-- `/fold:explore` — when the bug turns out to be a design problem
+- `/proj:audit` — the broad-sweep sibling: parallel waves finding *unknown* bugs (this skill traces *one known* one). Its `gotchas.md` holds the `GOTCHAS.md` format reference.
+- `/proj:playtest` — exercise the product to surface what's broken in the first place
+- `/proj:tasks` — track a deferred fix as a `#bug` task
+- `/proj:note` · `/proj:journal` — where confirmed findings land
+- `/proj:explore` — when the bug turns out to be a design problem

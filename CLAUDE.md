@@ -1,4 +1,11 @@
-# fold
+# Project Workflows
+
+Active skills now live in `skills/proj:*/`. Use the `proj:` prefix. Regroup is
+`proj:checkpoint`; the mxit skill alias is retired in favor of `proj:tasks`.
+The repository path and mxit parser/CLI remain unchanged. The canonical source
+map is `/Users/janzheng/Desktop/Projects/mcp-hub/skills-workshop/proj-sources.json`.
+The historical inventory below uses the former names; author active skills in
+their current `proj:` directories and keep `_archive/` as history.
 
 Discover, track, improve — fold again. Three skills that create a self-improving project loop.
 

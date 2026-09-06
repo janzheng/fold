@@ -1,16 +1,16 @@
 ---
-name: fold:audit
+name: proj:audit
 description: "Run a deep read-only codebase audit. Use to find race conditions, swallowed errors, security issues, logic bugs, and wiring failures."
 ---
 
-# fold:audit — Deep Parallel Codebase Audit
+# proj:audit — Deep Parallel Codebase Audit
 
 
 ## Lookup Cues
 
 Former frontmatter detail, kept here so global lookup stays compact:
 
-> Deep autonomous codebase audit — launch parallel agent waves to find race conditions, error swallowing, security issues, logic bugs, and wiring failures. Produces TASKS-AUDIT.md with prioritized findings for mxit. The "deep discover" facet of fold. Use when the user says "audit this", "find bugs", "scan for issues", "what's broken", "correctness sweep", "deep audit", "code audit", "fold:audit", or wants a comprehensive read-only codebase analysis.
+> Deep autonomous codebase audit — launch parallel agent waves to find race conditions, error swallowing, security issues, logic bugs, and wiring failures. Produces TASKS-AUDIT.md with prioritized findings for mxit. The "deep discover" facet of fold. Use when the user says "audit this", "find bugs", "scan for issues", "what's broken", "correctness sweep", "deep audit", "code audit", "proj:audit", or wants a comprehensive read-only codebase analysis.
 
 The **deep discover** facet of fold. Launches waves of parallel agents to read the entire codebase and catalog every correctness issue. **Read-only** — no fixes applied. All findings go into `TASKS-AUDIT.md`, which feeds directly into mxit for tracking and execution.
 
@@ -22,13 +22,16 @@ Two reasons this is subagent-native, not optional:
 **Whenever the harness supports subagent dispatch, the audit MUST run in subagents — never inline in the session that built the code.** The fresh-context isolation is the point, not just the parallelism. Fall back to sequential focused passes (one subsystem at a time, cold framing each pass) only when no subagent primitive exists.
 
 > **Relationship to other fold skills:**
-> - `fold:playtest:explore` = one agent, open-ended walkthrough, quick
-> - `fold:playtest:run` = scripted playtest with checklist
-> - **`fold:audit`** = industrial-scale parallel discovery, structured waves, exhaustive
-> - `fold:playtest:improve` = analyze then fix (runs AFTER audit produces findings)
-> - `fold:tasks` = track the findings as tasks, coordinate fixes
+> - `proj:playtest explore` = one agent, open-ended walkthrough, quick
+> - `proj:playtest run` = scripted playtest with checklist
+> - **`proj:audit`** = industrial-scale parallel discovery, structured waves, exhaustive
+> - `proj:playtest improve` = analyze then fix (runs AFTER audit produces findings)
+> - `proj:tasks` = track the findings as tasks, coordinate fixes
 
 ## Phase 1: Setup
+
+For a requested agent-operability review, load `proj:brief`'s
+`agent-operability.md` reference instead of launching a full codebase sweep.
 
 ### Understand the codebase
 
@@ -225,7 +228,7 @@ When the audit is complete (all planned waves run, or user says stop):
 
 1. **Write a summary** at the top of TASKS-AUDIT.md — total findings, top themes, recommended fix order
 2. **The Fix-First List IS the task list** — it's already in mxit-compatible format (`- [ ]` / `- [!]`)
-3. **The user can run `fold:run`** to start working through fixes, or `fold:playtest:improve` to have agents fix findings automatically
+3. **The user can run `proj:run`** to start working through fixes, or `proj:playtest improve` to have agents fix findings automatically
 4. **Tag audit findings** with `#audit` so they're distinguishable from manually-added tasks
 
 ## Key Principles
@@ -274,8 +277,8 @@ See `gotchas.md` (alongside this file) for the full pattern — format, graduati
 ## See Also
 
 - `gotchas.md` — companion doc; the durable debug-trap log that lives in every project using fold
-- `fold:playtest:explore` — lighter-weight open-ended discovery (one agent, quick)
-- `fold:playtest:improve` — analyze→fix pipeline (use AFTER audit produces findings)
-- `fold:tasks` — track findings as tasks, coordinate fixes
-- `fold:run` — dispatch agents to work through the fix list
-- `fold:autorefine` — iterative improvement loop (for refining a single artifact, not codebase-wide)
+- `proj:playtest explore` — lighter-weight open-ended discovery (one agent, quick)
+- `proj:playtest improve` — analyze→fix pipeline (use AFTER audit produces findings)
+- `proj:tasks` — track findings as tasks, coordinate fixes
+- `proj:run` — dispatch agents to work through the fix list
+- `proj:autorefine` — iterative improvement loop (for refining a single artifact, not codebase-wide)

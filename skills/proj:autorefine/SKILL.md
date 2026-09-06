@@ -1,5 +1,5 @@
 ---
-name: fold:autorefine
+name: proj:autorefine
 description: "Improve code, docs, skills, prompts, or other artifacts through an autonomous autorefine loop using scored rubrics or comparative checks."
 ---
 
@@ -285,4 +285,4 @@ The judge is always a fresh agent — no exceptions.
 
 ## Filing structural gripes as gotchas
 
-REFINE.md's "What didn't work" section is a private session log. If a discard reveals a *structural trap* (not just a bad attempt) — the kind of thing that cost you >5 minutes to diagnose and will bite again — promote it to the project's `GOTCHAS.md` as a durable entry. See `fold:audit/gotchas.md` for the format. The discard stays in REFINE.md; the rule lives in GOTCHAS.
+REFINE.md's "What didn't work" section is a private session log. If a discard reveals a *structural trap* (not just a bad attempt) — the kind of thing that cost you >5 minutes to diagnose and will bite again — promote it to the project's `GOTCHAS.md` as a durable entry. See `proj:audit/gotchas.md` for the format. The discard stays in REFINE.md; the rule lives in GOTCHAS.

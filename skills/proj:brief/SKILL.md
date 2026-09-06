@@ -1,16 +1,16 @@
 ---
-name: fold:brief
+name: proj:brief
 description: "Write a single-topic execution brief from an investigation or spike. Use when converged thinking needs to become a durable handoff document."
 ---
 
-# fold:brief — Boil It Down
+# proj:brief — Boil It Down
 
 
 ## Lookup Cues
 
 Former frontmatter detail, kept here so global lookup stays compact:
 
-> Concentrate one investigation, conversation, spike, or research thread into a single design doc with a clear recommendation that an executor can act on. **Single-topic, single-moment, points forward at execution** — NOT for tracking work over time (that's `/fold:journal`). Use when the user says "fold:brief", "brief this", "write a brief doc", "write a brief", or "deep dive doc" — or after an investigation has concluded and the thinking needs to survive the conversation in a form a future agent can pick up and execute against.
+> Concentrate one investigation, conversation, spike, or research thread into a single design doc with a clear recommendation that an executor can act on. **Single-topic, single-moment, points forward at execution** — NOT for tracking work over time (that's `/proj:journal`). Use when the user says "proj:brief", "brief this", "write a brief doc", "write a brief", or "deep dive doc" — or after an investigation has concluded and the thinking needs to survive the conversation in a form a future agent can pick up and execute against.
 
 A brief concentrates messy inputs from **one** investigation — tweets, research notes, conversation history, debugging session, architecture spike — into a single design doc with a clear recommendation. The doc becomes the context for one task: "go implement what's in here."
 
@@ -33,8 +33,8 @@ If you find yourself updating the same brief over weeks, you wanted a journal �
 
 ## When NOT to write a brief
 
-- **Tracking what's happening over time** — that's `/fold:journal`. Briefs don't grow; journal entries accumulate.
-- **Open exploration** — multiple paths, "should we?" — that's EXPLORE (`fold:explore`).
+- **Tracking what's happening over time** — that's `/proj:journal`. Briefs don't grow; journal entries accumulate.
+- **Open exploration** — multiple paths, "should we?" — that's EXPLORE (`proj:explore`).
 - **A single decision log** — a one-line "we decided X because Y" goes in `.journal/` as a `type: decision` entry, not a brief.
 - **A pile of cross-cutting notes** — that's a journal entry or a notes file, not a brief.
 - **Something you'll keep amending as you learn** — write journal entries first; promote to a brief once thinking has converged.
@@ -165,6 +165,9 @@ The task is thin — the BRIEF doc has all the context. When the task ships and 
 
 ## See also
 
-- `/fold:tasks` — full BRIEF reference + TASKS family docs
-- `/fold:explore` — upstream exploration (EXPLORE files)
-- `/fold:journal` — time-series lab notebook for record-keeping over time
+For an agent-operated system or a requested agent-operability review, read
+[agent-operability.md](agent-operability.md). Keep the agreed launch scope fixed.
+
+- `/proj:tasks` — full BRIEF reference + TASKS family docs
+- `/proj:explore` — upstream exploration (EXPLORE files)
+- `/proj:journal` — time-series lab notebook for record-keeping over time

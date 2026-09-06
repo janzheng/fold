@@ -1,6 +1,6 @@
 # GOTCHAS.md — durable debug-trap log
 
-Companion to `fold:audit`. Where `TASKS-AUDIT.md` is a one-time sweep, `GOTCHAS.md` is **the persistent residue of debugging** — traps that bit you, written down so the next session (or the next person) doesn't pay the same tax twice.
+Companion to `proj:audit`. Where `TASKS-AUDIT.md` is a one-time sweep, `GOTCHAS.md` is **the persistent residue of debugging** — traps that bit you, written down so the next session (or the next person) doesn't pay the same tax twice.
 
 ## What belongs here
 
@@ -10,8 +10,8 @@ Distinguish from sibling artifacts:
 
 | Artifact | Source | Lifecycle |
 |---|---|---|
-| `TASKS-AUDIT.md` | `fold:audit` — read-only sweep | Findings either get fixed or graduate to `TASKS.md` |
-| `PLAYTEST-RESULTS.md` | `fold:playtest` — directed/exploratory runs | Pass/fail log per session, low-noise summary |
+| `TASKS-AUDIT.md` | `proj:audit` — read-only sweep | Findings either get fixed or graduate to `TASKS.md` |
+| `PLAYTEST-RESULTS.md` | `proj:playtest` — directed/exploratory runs | Pass/fail log per session, low-noise summary |
 | **`GOTCHAS.md`** | Field debugging — whatever bit you in real work | Append-only knowledge base; never deleted |
 | `pitfalls.md` | Graduates from `GOTCHAS.md` | Things that bit **≥2 places** — promoted in |
 
@@ -93,9 +93,9 @@ For very large archives, move retired entries to `GOTCHAS-archive.md` next to th
 
 ## Relating to other fold artifacts
 
-- **`fold:audit` finds it** → if the finding is a real-world bite (not a theoretical "this could be a race"), file as a gotcha after the audit
-- **`fold:playtest` discovers it** → a `confused` or `fail` resolution with a non-obvious root cause earns a gotcha; the playtest entry can reference the gotcha ID
-- **`fold:autorefine` surfaces it** → the "what didn't work" section of REFINE.md is a private session log; if a discard reveals a structural trap (not just a bad attempt), promote it to a gotcha
+- **`proj:audit` finds it** → if the finding is a real-world bite (not a theoretical "this could be a race"), file as a gotcha after the audit
+- **`proj:playtest` discovers it** → a `confused` or `fail` resolution with a non-obvious root cause earns a gotcha; the playtest entry can reference the gotcha ID
+- **`proj:autorefine` surfaces it** → the "what didn't work" section of REFINE.md is a private session log; if a discard reveals a structural trap (not just a bad attempt), promote it to a gotcha
 - **`.journal/` entries** → narrative incident postmortems often produce 1-3 gotchas as their durable output; the journal is the *story*, the gotcha is the *rule*
 
 The throughline: **fold's discovery skills produce findings; gotchas keep the ones worth keeping.**
@@ -161,7 +161,7 @@ Graduation: if the same gotcha bites a second place, promote to
 `pitfalls.md` and leave a stub here.
 
 Never delete — supersede in place with `**Superseded by GOTCHA #N:**`
-or move to `GOTCHAS-archive.md`. See `fold:audit/gotchas.md` for the
+or move to `GOTCHAS-archive.md`. See `proj:audit/gotchas.md` for the
 full pattern.
 
 ---

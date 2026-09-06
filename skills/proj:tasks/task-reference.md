@@ -1,16 +1,16 @@
 ---
-name: fold:tasks
+name: proj:tasks
 description: "Manage markdown-native project tasks with mxit: TASKS files, statuses, dependencies, maps, briefs, decisions, and multi-agent coordination."
 ---
 
-# fold:tasks — Task Tracking & Orchestration
+# proj:tasks — Task Tracking & Orchestration
 
 
 ## Lookup Cues
 
 Former frontmatter detail, kept here so global lookup stays compact:
 
-> The complete mxit task system — set up TASKS.md, manage the TASKS family (TASKS-DESIGN.md, TASKS-MAP.md, TASKS-{area}.md), run the task runner, and coordinate multi-agent work. Markdown-native task lists with rich statuses, sub-items, tags, due dates, #needs dependencies, phased buildouts, decisions, risks, and agent coordination. The "track" facet of fold. Use when the user says "tasks", "todos", "mxit", "TASKS.md", "add a task", "mark done", "task list", "task it out", "tasks it out", "let's task this", "let's task it out", "tasks plz", "what's left to do", "set up tasks", "run tasks", "what's ready", "project map", "architecture map", "roadmap", "what blocks what", "dependencies", "vision", "decisions", "archive tasks", "clean up tasks", "garbage collect", "fold:tasks", "fold:mxit", "/fold:tasks", or wants to track work items in a project. **"task it out" / "tasks it out" / "let's task it" — ALWAYS triggers this skill**; it's the user's main shorthand for "set this conversation up as tasks in TASKS.md."
+> The complete mxit task system — set up TASKS.md, manage the TASKS family (TASKS-DESIGN.md, TASKS-MAP.md, TASKS-{area}.md), run the task runner, and coordinate multi-agent work. Markdown-native task lists with rich statuses, sub-items, tags, due dates, #needs dependencies, phased buildouts, decisions, risks, and agent coordination. The "track" facet of fold. Use when the user says "tasks", "todos", "mxit", "TASKS.md", "add a task", "mark done", "task list", "task it out", "tasks it out", "let's task this", "let's task it out", "tasks plz", "what's left to do", "set up tasks", "run tasks", "what's ready", "project map", "architecture map", "roadmap", "what blocks what", "dependencies", "vision", "decisions", "archive tasks", "clean up tasks", "garbage collect", "proj:tasks", "proj:tasks", "/proj:tasks", or wants to track work items in a project. **"task it out" / "tasks it out" / "let's task it" — ALWAYS triggers this skill**; it's the user's main shorthand for "set this conversation up as tasks in TASKS.md."
 
 The **track** facet of fold. Set up and manage `TASKS.md` files, scale to the full TASKS family for bigger projects, and run the task lifecycle with multi-agent coordination.
 
@@ -43,9 +43,9 @@ For bigger projects (3+ areas), also suggest TASKS-MAP.md and TASKS-DESIGN.md �
 
 ## Pairs with
 
-- `/fold:playtest` — discoveries get emitted as mxit tasks with `#found`
-- `/fold:autorefine` — too-big issues get emitted as mxit tasks with `#found #autorefine`
-- `/fold:explore` — speculative exploration (EXPLORE files) feeds into TASKS when committed
+- `/proj:playtest` — discoveries get emitted as mxit tasks with `#found`
+- `/proj:autorefine` — too-big issues get emitted as mxit tasks with `#found #autorefine`
+- `/proj:explore` — speculative exploration (EXPLORE files) feeds into TASKS when committed
 - `/fold` — the full loop: discover → track → improve → fold again
 
 ---
@@ -563,7 +563,7 @@ When a task is too complex to just implement, someone needs to investigate first
 
 BRIEF docs are the bridge between "we need to figure this out" and "go do the thing." They capture the thinking so it survives the conversation and any agent picking up the task gets full context.
 
-**Briefs are single-topic, single-moment, and point forward at execution.** They don't track work over time. If you find yourself updating the same brief week after week, you wanted a `.journal/` series — see `/fold:journal`.
+**Briefs are single-topic, single-moment, and point forward at execution.** They don't track work over time. If you find yourself updating the same brief week after week, you wanted a `.journal/` series — see `/proj:journal`.
 
 #### Where they live
 
@@ -641,9 +641,9 @@ Briefs are frozen at write-time, so reality drifts away from them. When the pile
 - Simple tasks where the implementation is obvious
 - Tasks where the TASKS description is sufficient context
 - Quick fixes that don't need a design phase
-- **Tracking what's happening over time** — that's `/fold:journal`, not a brief
+- **Tracking what's happening over time** — that's `/proj:journal`, not a brief
 - **A single decision log** ("we decided X because Y") — `.journal/` entry with `type: decision`
-- **Open exploration with multiple paths** — that's EXPLORE (`fold:explore`)
+- **Open exploration with multiple paths** — that's EXPLORE (`proj:explore`)
 
 #### BRIEF vs JOURNAL vs EXPLORE
 

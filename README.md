@@ -1,4 +1,23 @@
-# fold
+# Project Workflows
+
+The active skill prefix is `proj:`. This repository retains its `fold` path and
+the existing mxit CLI/file format. `fold:regroup` is now `proj:checkpoint`;
+`fold:mxit` is retired in favor of `proj:tasks`.
+
+Canonical here: `proj:tasks`, `proj:run`, `proj:brief`, `proj:explore`,
+`proj:audit`, `proj:debug`, `proj:playtest`, `proj:autorefine`, `proj:11star`.
+Canonical in MCP Hub's workshop: `proj:checkpoint`, `proj:research`,
+`proj:journal`, `proj:note`, `proj:runlog`, `proj:lessons`.
+See `/Users/janzheng/Desktop/Projects/mcp-hub/skills-workshop/proj-sources.json`.
+
+Skills are copied through MCP Hub to Claude, Codex/Agents, and Cursor. Detailed
+task syntax now lives in `skills/proj:tasks/task-reference.md`; the short skill
+loads it only when needed. The brief includes an optional `agent-operability.md`
+review. Existing project records and parser commands are unchanged.
+
+The original Fold overview below preserves the system's history; old `fold:`
+skill commands refer to their `proj:` counterparts, except explicitly archived
+commands, which are not active.
 
 Three tools for AI agents working on projects: discover issues (playtest), track work (mxit), and improve iteratively (autorefine). Each works standalone. Together they form a loop.
 
