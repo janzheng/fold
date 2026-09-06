@@ -15,6 +15,9 @@ its existing structure; for a new project, a single `TASKS.md` is enough.
   `[~]` deferred. Preserve resolution brackets and explain completed/deferred work.
 - Mark done only from evidence. Capture follow-ups without silently expanding
   the current assignment or marking partial work complete.
+- Hold `#discovered` work for human scope review and `#needs-approval` work for
+  explicit approval; remove each tag only when its gate is satisfied. Approval
+  keeps the task open for execution. Gates also hold descendants.
 - For requested execution, use `proj:run` or do the scoped task directly, then
   `proj:checkpoint` at the meaningful boundary.
 

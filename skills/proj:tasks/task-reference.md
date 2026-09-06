@@ -79,16 +79,16 @@ Machine-readable state — separate from human-meaningful status:
 - `#error="message"` — error detail from last failure
 - `#stuck` — runner gave up after MAX_RETRIES, needs human intervention
 - `#blocked-by:tag` — blocked until no open task has that tag
-- `#needs:tag` — blocked until that tag's item is `[x]` (same semantics, used for architecture dependencies)
+- `#needs:tag` — requires at least one matching item and all matches `[x]`; missing targets block
 
 A task can be `[!]` important AND `#error` at the same time.
 
 ### Optional Convention Tags
 
-Lightweight conventions — no enforcement, just agreed-upon tag names that agents and humans recognize. Use any that fit your project, ignore the rest.
+Use these conventions where appropriate. The bundled readiness helper enforces `#needs-approval`; other entries here are descriptive.
 
 - `#goal:name` — links a task to a goal defined in TASKS-DESIGN.md. The lightweight "why chain" — an agent reading the task can check what goal it serves.
-- `#needs-approval` — task is blocked until a human explicitly approves it. Human changes status to `[x] [approved: reason]` or `[~] [rejected: reason]`. Use for anything with real-world consequences (deploys, public announcements, irreversible changes).
+- `#needs-approval` — holds the task and descendants until explicit human approval. Record `[approved: reason]`, remove `#needs-approval`, and keep `[ ]` or `[!]` for execution. Approval is not completion; only verified execution earns `[x]`. For rejection use `[~] [rejected: reason]` and retain the gate so descendants remain held. Use where human sign-off is required.
 - `#bug` — marks a task as a bug fix. Grep `TASKS.done.md` for your fix log. If a bug is big enough to need triage, open a Linear ticket instead — mxit tracks work, not issues.
 - `[heartbeat: ISO-timestamp]` — agent writes this when it starts working on a task. Next agent checks freshness — if the timestamp is stale (e.g., >30min old), the previous agent likely crashed. Lightweight liveness detection without a server.
 
@@ -96,7 +96,7 @@ Lightweight conventions — no enforcement, just agreed-upon tag names that agen
 - [ ] Deploy to production #goal:launch #needs-approval
 - [ ] Fix off-by-one in parser #bug
 - [@claude] Refactor auth module #goal:security [heartbeat: 2026-03-19T14:32Z]
-- [x] [approved: reviewed, looks good] Migrate user data #goal:launch
+- [ ] [approved: reviewed, looks good] Migrate user data #goal:launch
 ```
 
 ### Resolution Format
@@ -130,8 +130,10 @@ A task is **ready** (actionable) when ALL of:
 - Status is `[ ]` or `[!]`
 - No children are in `[ ]`, `[@]`, or `[!]` status (subtasks must finish first)
 - No `#blocked-by:tag` where that tag exists on an open task
-- No `#needs:tag` where that tag exists on a non-`[x]` item
+- Every `#needs:tag` has at least one match, and every match is `[x]`
 - No `#stuck` tag
+- No `#discovered` or `#needs-approval` tag
+- No ancestor with these tags or an unmet dependency; gates hold the whole subtree
 
 ### Multi-Agent Claiming
 
@@ -173,7 +175,7 @@ When an agent finds new work during execution, nest under current task with `#di
   - [ ] Token expiry edge case on DST change #discovered
 ```
 
-Discovered tasks are NOT auto-dispatched. They wait for human review.
+Discovered tasks and their descendants are NOT auto-dispatched. They wait for human review. Remove `#discovered` only after a human accepts the scope; any approval gate still applies. Optional discoveries may remain held under a completed original task, whose completion must describe only its verified scope.
 
 ### Archival
 
@@ -456,7 +458,7 @@ This means:
 - **API** can't start until **database schema** is `[x]`
 - If multiple items have no unmet `#needs`, they can be **worked in parallel**
 
-Same semantics as `#blocked-by` on tasks, but applied to architecture items. The `#needs` tag explicitly answers "what blocks what" and "what can fan out."
+Unlike `#blocked-by` (which only checks matches in `[ ]`, `[@]`, or `[!]`), `#needs` requires at least one match and all matches `[x]`. Missing, obsolete, or undecided dependencies do not satisfy it.
 
 #### Computing what's parallelizable
 
@@ -912,6 +914,9 @@ mxit recover  <file>                         Reset crashed [@] tasks to [ ]
 mxit run      <file>                         Full loop: recover → ready → show
 ```
 
+`ready` and `run` accept repeatable `--context <file>` for dependency sources.
+`fail` accepts `--max-retries <N>` (default 3; use 2 for `proj:run`).
+
 ### Runner Lifecycle
 
 #### 1. Recover crashed tasks
@@ -949,13 +954,21 @@ mxit fail TASKS.md <line> --error "timeout after 30s"
 
 **On done:** Sets `[x]`, adds `[done: message]` resolution, removes `#error`/`#stuck` tags.
 
-**On fail:** Sets `[ ]`, increments `#error=N`, adds `#error="message"`. After 3 failures, adds `#stuck`.
+**On fail:** Sets `[ ]`, increments `#error=N`, adds `#error="message"`. At `--max-retries` failures (default 3), adds `#stuck` and stops selection. `proj:run` uses a two-attempt limit, so pass `--max-retries 2` on each failure. Preserve counts across rescans; clear `#stuck` only after human intervention.
 
 ### Which Files to Run
 
 The runner operates on **TASKS.md** and **TASKS-{area}.md** files. These contain actionable work.
 
-**TASKS-MAP.md** and **TASKS-DESIGN.md** are NOT run — they're slower-moving documents that humans update. However, `#needs:tag` references in task files can point to MAP items, so the runner resolves those tags across all TASKS files when computing readiness.
+**TASKS-MAP.md** and **TASKS-DESIGN.md** are NOT run — they're slower-moving documents that humans update. Dependencies can reference these or other task files. The bundled CLI reads only the target and explicit, repeatable `--context <file>` arguments (paths relative to the working directory); it does not follow links or scan directories. Both `ready` and `run` use context for dependencies only, never selecting or recovering context tasks. Missing or unreadable context files are errors. Include every relevant dependency source, including archived completed items if referenced; a missing `#needs` target stays blocked.
+
+```bash
+mxit ready TASKS-ui.md --context TASKS-MAP.md --context TASKS-api.md --json
+mxit run TASKS-ui.md --context TASKS-MAP.md
+```
+
+Direct callers can pass dependency trees or flat tasks as `getReady(tasks, allTasks)`.
+Candidates are always included in dependency lookup; only `tasks` are returned.
 
 ### Full Automation Loop
 
@@ -978,8 +991,8 @@ mxit ready TASKS.md
 For multi-file projects, check area files too:
 
 ```bash
-mxit ready TASKS-ui.md --json
-mxit ready TASKS-api.md --json
+mxit ready TASKS-ui.md --context TASKS-MAP.md --context TASKS-api.md --json
+mxit ready TASKS-api.md --context TASKS-MAP.md --context TASKS-ui.md --json
 ```
 
 ### Parser Library
@@ -989,7 +1002,7 @@ The `scripts/` folder contains a full TypeScript parser library:
 - `parse.ts` — `parseTasks(markdown)` → Task[] with full nesting, tags, due dates, resolution brackets, annotations
 - `serialize.ts` — `serializeTasks(tasks)` → markdown; `applyTasks(original, tasks)` → preserves non-task lines
 - `validate.ts` — `validateFormat(markdown)` → finds malformed brackets, bad indentation, orphan subtasks
-- `ready.ts` — `getReady(tasks)` → filters for actionable tasks respecting children, blocked-by, stuck
+- `ready.ts` — `getReady(tasks, allTasks?)` → respects children, dependencies, and inherited stuck/review/approval gates
 - `fileops.ts` — `claimTask()`, `completeTask()`, `failTask()`, `resetCrashed()`, `addDiscoveredTask()`
 
 See [references/SPEC.md](references/SPEC.md) for the full formal specification.

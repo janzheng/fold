@@ -8,16 +8,20 @@ const HELP = `mxit — markdown-native task management
 Usage: mxit <command> <file> [options]
 
 Commands:
-  ready    <file> [--json]               Show ready (actionable) tasks
+  ready    <file> [--json] [--context <file>] Show ready tasks
   claim    <file> <line> --agent <name>   Claim a task for an agent
   done     <file> <line> [--result <msg>] Mark task complete
   fail     <file> <line> --error <msg>    Mark task failed
   validate <file>                         Check format for errors
   recover  <file>                         Reset crashed [@] tasks to [ ]
-  run      <file> [--agent <name>]        Full loop: recover → ready → dispatch
+  run      <file> [--context <file>]      Recover target, then show ready tasks
+
+--context may repeat on ready/run. Files are dependency-only, resolved from cwd.
+Only explicit files are read; links and directories are not scanned.
+fail accepts --max-retries <N> (default 3; proj:run uses 2).
 
 States: [ ] open, [@] ongoing, [x] done, [~] obsolete, [?] question, [!] important, [*] starred
-Tags:   #error, #error=N, #stuck, #blocked-by:tag, #discovered
+Tags:   #error, #error=N, #stuck, #blocked-by:tag, #needs:tag, #discovered, #needs-approval
 `;
 
 function die(msg: string): never {
@@ -33,6 +37,18 @@ function getArg(args: string[], flag: string): string | undefined {
 
 function hasFlag(args: string[], flag: string): boolean {
   return args.includes(flag);
+}
+
+async function readReady(file: string, args: string[]) {
+  const tasks = parseTasks(await Deno.readTextFile(file));
+  const context = [];
+  for (let i = 2; i < args.length; i++) {
+    if (args[i] !== "--context") continue;
+    const path = args[++i];
+    if (!path || path.startsWith("--")) die("--context requires a file path");
+    context.push(...parseTasks(await Deno.readTextFile(path)));
+  }
+  return getReady(tasks, context);
 }
 
 async function main() {
@@ -52,9 +68,7 @@ async function main() {
 
   switch (command) {
     case "ready": {
-      const content = await Deno.readTextFile(file);
-      const tasks = parseTasks(content);
-      const ready = getReady(tasks);
+      const ready = await readReady(file, args);
 
       if (hasFlag(args, "--json")) {
         console.log(JSON.stringify(ready.map(t => ({
@@ -143,9 +157,7 @@ async function main() {
         console.log(`Recovered ${recovered} crashed task${recovered === 1 ? "" : "s"}`);
       }
 
-      const content = await Deno.readTextFile(file);
-      const tasks = parseTasks(content);
-      const ready = getReady(tasks);
+      const ready = await readReady(file, args);
 
       if (ready.length === 0) {
         console.log("No ready tasks. Done.");

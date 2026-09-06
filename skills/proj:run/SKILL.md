@@ -33,6 +33,15 @@ Read TASKS.md (and any TASKS-{area}.md files). A task is **ready** when:
 - No pending children
 - No unmet `#needs:tag` or `#blocked-by:tag`
 - No `#stuck` tag
+- No `#discovered` or `#needs-approval` tag; these hold work for explicit human review or approval
+- No ancestor with any of these gates or an unmet dependency (children cannot bypass them)
+
+`#needs:tag` requires at least one matching item and all matches must be `[x]`.
+Missing targets block readiness. `#blocked-by:tag` blocks while a matching item
+is `[ ]`, `[@]`, or `[!]`; a missing target does not block. Read the relevant
+indexed task files, including dependency sources such as TASKS-MAP.md, before
+deciding readiness. The bundled CLI needs these files passed explicitly via
+repeatable `--context <file>`; it does not scan links or directories.
 
 `[!]` tasks go first. Then `[ ]` in bullet order.
 
@@ -122,7 +131,7 @@ For each task (whether you or a subagent):
 1. Read the task description and any linked docs (BRIEF, TICKET)
 2. Claim it: mark `[@]` or `[@agent-name]` in TASKS.md
 3. Do the work
-4. If you discover new work during execution, note it as sub-items with `#discovered`
+4. If you discover new work during execution, note it as sub-items with `#discovered`. Hold these and their descendants for human review. Remove `#discovered` only after the human accepts the scope; approval gates still apply. Optional follow-ups do not need execution to finish the original scope; retain them as held follow-ups when recording its verified completion.
 
 ## Step 4: Review Gate
 
@@ -137,7 +146,7 @@ Ask yourself:
 ```
 
 **If review passes:** proceed to mark done.
-**If review fails:** fix the issues, then re-review. If stuck after 2 attempts, mark `[!] #error="what's wrong"` and move on.
+**If review fails:** fix the issues, then re-review. After 2 failed attempts, mark `[!] #error=2 #error="what's wrong" #stuck` and move on. Preserve the attempt count across rescans and sessions. Do not clear `#stuck` automatically; resume only after human intervention. With the bundled CLI, use `fail --max-retries 2` on each failure (its standalone default is 3).
 
 ## Step 5: Mark Done
 
@@ -151,6 +160,11 @@ For failures:
 ```markdown
 - [!] Task description #error="what went wrong"
 ```
+
+This remains retryable. At the two-attempt limit, also record `#error=2 #stuck`.
+Human approval is permission to execute, not completion: keep `[ ]` (or `[!]`),
+record `[approved: reason]`, and remove `#needs-approval` after explicit approval.
+Use `[x]` only after execution and verification.
 
 ## Step 6: Repeat
 
@@ -213,10 +227,11 @@ The CLI still works for manual state management:
 
 ```bash
 mxit ready    TASKS.md [--json]               # Show ready tasks
+mxit ready    TASKS-api.md --context TASKS-MAP.md --context TASKS-auth.md
 mxit recover  TASKS.md                         # Reset crashed [@] → [ ]
 mxit claim    TASKS.md <line> --agent <name>   # Claim a task
 mxit done     TASKS.md <line> --result "msg"   # Mark complete
-mxit fail     TASKS.md <line> --error "msg"    # Mark failed
+mxit fail     TASKS.md <line> --error "msg" --max-retries 2
 mxit validate TASKS.md                         # Check format
 ```
 

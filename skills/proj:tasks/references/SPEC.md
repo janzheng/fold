@@ -249,9 +249,12 @@ The following tags have special meaning:
 | `#stuck` | Runner gave up after MAX_RETRIES, needs human intervention |
 | `#blocked-by:tag` | Blocked until no open task has that tag |
 | `#needs:tag` | Blocked until the item with that `#tag` is `[x]` (architecture dependencies) |
-| `#discovered` | Task was found during execution of parent task |
+| `#discovered` | Found during execution; held with descendants for human scope review |
 
-`#needs:tag` and `#blocked-by:tag` have the same blocking semantics but different intent: `#blocked-by` is for task-level blocking within a file, while `#needs` is for architecture-level dependencies (typically in TASKS-MAP.md) where features depend on other features being shipped. Both prevent the item from being **ready**.
+`#needs:tag` requires at least one matching item and all matches `[x]`; missing targets block. `#blocked-by:tag` blocks only while a match is `[ ]`, `[@]`, or `[!]`. Both apply to descendants. The bundled CLI resolves dependencies in the target plus repeatable `--context <file>` inputs for `ready` and `run`, without following links or scanning directories. Context files supply dependencies only, not executable candidates.
+
+`#needs-approval` holds a task and descendants until explicit human approval. Record `[approved: reason]`, remove the tag, and keep the task open for execution; `[x]` means verified completion, never permission. Rejection may use `[~] [rejected: reason]` while retaining the gate.
+`#discovered` holds work and descendants until human review accepts its scope and removes the tag. `#stuck` also holds descendants until human intervention.
 
 Execution state tags are typically written by a runner or agent, not by humans, though humans MAY add or remove them. `#needs` tags are typically written by humans when laying out architecture.
 
@@ -398,7 +401,7 @@ When an agent discovers new work during execution, it MUST nest the discovery un
   - [ ] Token expiry edge case on DST change #discovered
 ```
 
-Discovered tasks MUST NOT be automatically dispatched. They wait for human review or explicit user action.
+Discovered tasks and descendants MUST NOT be automatically dispatched. Remove `#discovered` after explicit human acceptance of the scope; approval gates remain independent. Optional follow-ups may stay held under a completed original task, whose completion records only its verified scope.
 
 ## Ready Semantics
 
@@ -407,8 +410,10 @@ A task is **ready** (actionable) when ALL of the following are true:
 - Status is `[ ]` or `[!]`
 - AND no children are in `[ ]`, `[@]`, or `[!]` status (subtasks must finish first)
 - AND no `#blocked-by:tag` where that tag exists on an open task
-- AND no `#needs:tag` where that tag exists on a non-`[x]` item
+- AND every `#needs:tag` has at least one match and all matches are `[x]`
 - AND no `#stuck` tag
+- AND no `#discovered` or `#needs-approval` tag
+- AND no ancestor has these gates or an unmet dependency
 
 ## Priority
 
@@ -468,7 +473,7 @@ A compliant mxit runner follows 5 steps:
 4. Agent does work, returns success or failure with a short message
 5. Update task in file: new status + optional `[resolution]` + tags
 
-**On failure:** Runner sets status back to `[ ]`, adds/increments `#error` tag. After MAX_RETRIES (default 3), adds `#stuck` and stops retrying.
+**On failure:** The bundled CLI sets status back to `[ ]`, adds/increments `#error` tag. At `--max-retries` failures (default 3), it adds `#stuck` and stops selection. The `proj:run` instruction loop uses 2 attempts; pass `--max-retries 2` on each failure. Preserve counts across rescans and sessions; only human intervention releases `#stuck`.
 
 **On success:** Runner sets status to `[x]`, adds `[keyword: message]` resolution bracket if agent returned a message.
 
@@ -675,7 +680,8 @@ EXECUTION STATE (tags = what happened to it)
 #stuck              Runner gave up, needs human
 #blocked-by:tag     Blocked until no open task has that tag
 #needs:tag          Blocked until that tag's item is [x] (architecture deps)
-#discovered         Found during execution of parent task
+#discovered         Found during execution; held until human scope review removes tag
+#needs-approval     Held until human approval removes tag; keep open for execution
 
 RESOLUTION
 - [x] [fixed: rewrote validation] Task description #tag [2026-03-14]
@@ -690,8 +696,10 @@ READY (actionable when all true)
   status is [ ] or [!]
   no children in [ ], [@], or [!]
   no #blocked-by:tag where tag exists on open task
-  no #needs:tag where tag exists on non-[x] item
+  every #needs:tag has at least one match and all matches are [x]
   no #stuck tag
+  no #discovered or #needs-approval tag, including on ancestors
+  no unmet ancestor dependency
 
 TASKS FAMILY (scaling for larger projects)
   TASKS.md              the fridge list (daily)
@@ -739,7 +747,7 @@ REGEX
 
 #### Version 0.4
 
-- Add `#needs:tag` for architecture-level dependencies (same blocking semantics as `#blocked-by`)
+- Add `#needs:tag` for architecture-level dependencies (requires matching completed items)
 - Add TASKS Family scaling: TASKS-DESIGN.md, TASKS-MAP.md, TASKS-{area}.md companion files
 - Add phased buildout convention with `[shipped DATE]` annotations
 - Add lanes for parallel workstreams within phases
