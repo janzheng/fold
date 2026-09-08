@@ -1,6 +1,6 @@
 ---
 name: proj:11star
-description: "Rate and improve a product's UX on the 11-star scale. Use for UX audits, experience ratings, and deciding how to level up a product."
+description: "Rate product UX on the 11-star scale and choose improvements."
 version: 0.1.0
 license: MIT
 ---

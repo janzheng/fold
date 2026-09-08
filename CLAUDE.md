@@ -1,5 +1,8 @@
 # Project Workflows
 
+`proj:autorefine` is archived, not active. Preserve its unchanged source under
+`_archive/skills/proj:autorefine/`; see `_archive/README.md` for restoration.
+
 Active skills now live in `skills/proj:*/`. Use the `proj:` prefix. Regroup is
 `proj:checkpoint`; the mxit skill alias is retired in favor of `proj:tasks`.
 The repository path and mxit parser/CLI remain unchanged. The canonical source

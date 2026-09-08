@@ -1,6 +1,6 @@
 ---
 name: proj:explore
-description: "Capture and develop ideas in EXPLORE files, from quick stray thoughts to brainstorms and product specs that may become tasks."
+description: "Capture and develop ideas before committing them to tasks."
 ---
 
 # proj:explore — Capture, Explore, Brainstorm

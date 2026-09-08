@@ -1,6 +1,6 @@
 ---
 name: proj:tasks
-description: "Manage project tasks in markdown: task it out, add a task, what's next, mark done, dependencies, or a roadmap. Use the existing project task convention; execution can continue through proj:run."
+description: "Track planned work, priorities, dependencies, and completion in TASKS files."
 ---
 
 # Project tasks

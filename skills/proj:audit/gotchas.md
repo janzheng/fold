@@ -95,7 +95,7 @@ For very large archives, move retired entries to `GOTCHAS-archive.md` next to th
 
 - **`proj:audit` finds it** → if the finding is a real-world bite (not a theoretical "this could be a race"), file as a gotcha after the audit
 - **`proj:playtest` discovers it** → a `confused` or `fail` resolution with a non-obvious root cause earns a gotcha; the playtest entry can reference the gotcha ID
-- **`proj:autorefine` surfaces it** → the "what didn't work" section of REFINE.md is a private session log; if a discard reveals a structural trap (not just a bad attempt), promote it to a gotcha
+- **Historical REFINE.md logs** → the "what didn't work" section is a private session log; if an old discard reveals a structural trap (not just a bad attempt), promote it to a gotcha. The autorefine skill is archived.
 - **`.journal/` entries** → narrative incident postmortems often produce 1-3 gotchas as their durable output; the journal is the *story*, the gotcha is the *rule*
 
 The throughline: **fold's discovery skills produce findings; gotchas keep the ones worth keeping.**

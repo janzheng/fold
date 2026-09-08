@@ -44,7 +44,7 @@ For bigger projects (3+ areas), also suggest TASKS-MAP.md and TASKS-DESIGN.md �
 ## Pairs with
 
 - `/proj:playtest` — discoveries get emitted as mxit tasks with `#found`
-- `/proj:autorefine` — too-big issues get emitted as mxit tasks with `#found #autorefine`
+- Large findings stay in TASKS for scope review; old `#autorefine` tags do not start a loop.
 - `/proj:explore` — speculative exploration (EXPLORE files) feeds into TASKS when committed
 - `/fold` — the full loop: discover → track → improve → fold again
 

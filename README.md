@@ -5,10 +5,13 @@ the existing mxit CLI/file format. `fold:regroup` is now `proj:checkpoint`;
 `fold:mxit` is retired in favor of `proj:tasks`.
 
 Canonical here: `proj:tasks`, `proj:run`, `proj:brief`, `proj:explore`,
-`proj:audit`, `proj:debug`, `proj:playtest`, `proj:autorefine`, `proj:11star`.
+`proj:audit`, `proj:debug`, `proj:playtest`, `proj:11star`.
 Canonical in MCP Hub's workshop: `proj:checkpoint`, `proj:research`,
 `proj:journal`, `proj:note`, `proj:runlog`, `proj:lessons`.
 See `/Users/janzheng/Desktop/Projects/mcp-hub/skills-workshop/proj-sources.json`.
+
+`proj:autorefine` was archived on 2026-09-08, not deleted. Its unchanged source
+and restoration steps live in [_archive/README.md](_archive/README.md).
 
 Skills are copied through MCP Hub to Claude, Codex/Agents, and Cursor. Detailed
 task syntax now lives in `skills/proj:tasks/task-reference.md`; the short skill

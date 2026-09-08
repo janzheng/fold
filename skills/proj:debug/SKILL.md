@@ -1,6 +1,6 @@
 ---
 name: proj:debug
-description: "Find the root cause of a specific known bug, then optionally fix it — reproduce, trace the causal chain to where valid state first went wrong, confirm the whole chain before touching code, fix test-first and minimal. The targeted root-cause facet of fold (vs proj:audit's broad sweep for unknown bugs). Use when the user says 'debug this', 'why is this failing', 'fix this bug', 'trace this error', 'find the root cause', 'what's causing X', 'this is broken', 'it worked before', 'keeps failing', 'I'm stuck on', or pastes a stack trace, error message, or failing test."
+description: "Trace a known bug, error, or failing test to its cause; fix only when asked."
 ---
 
 # proj:debug — Root-Cause a Known Bug

@@ -1,6 +1,6 @@
 ---
 name: proj:playtest
-description: "Agentic playtesting — the discover facet of fold. Three modes: run (execute directed playtests), explore (open-ended fresh-eyes/adversarial/ergonomics/dogfooding), improve (analyze→fix pipeline). Use when the user says playtest, run playtest, try to break it, what's weird about this, fresh eyes, dogfood, analyze and fix."
+description: "Try a product to find bugs and awkward UX; run, explore, or review then fix."
 ---
 
 # proj:playtest — Agentic Playtesting
@@ -15,7 +15,7 @@ Use when the user says "playtest this", "run playtest", "execute playtest", "try
 ## Pairs with
 
 - `/proj:tasks` — discoveries get emitted as mxit tasks with `#found`
-- `/proj:autorefine` — too-big issues get emitted as mxit tasks with `#found`, then refined
+- `/proj:run` — execute ready findings after task scope and approval gates are satisfied
 - `/fold` — the full loop: discover → track → improve → fold again
 
 ## Three modes

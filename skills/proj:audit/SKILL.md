@@ -1,6 +1,6 @@
 ---
 name: proj:audit
-description: "Run a deep read-only codebase audit. Use to find race conditions, swallowed errors, security issues, logic bugs, and wiring failures."
+description: "Find unknown code bugs and security issues in a deep, read-only audit."
 ---
 
 # proj:audit — Deep Parallel Codebase Audit
@@ -281,4 +281,3 @@ See `gotchas.md` (alongside this file) for the full pattern — format, graduati
 - `proj:playtest improve` — analyze→fix pipeline (use AFTER audit produces findings)
 - `proj:tasks` — track findings as tasks, coordinate fixes
 - `proj:run` — dispatch agents to work through the fix list
-- `proj:autorefine` — iterative improvement loop (for refining a single artifact, not codebase-wide)

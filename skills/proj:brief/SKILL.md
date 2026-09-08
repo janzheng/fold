@@ -1,6 +1,6 @@
 ---
 name: proj:brief
-description: "Write a single-topic execution brief from an investigation or spike. Use when converged thinking needs to become a durable handoff document."
+description: "Turn a settled investigation into a focused execution handoff."
 ---
 
 # proj:brief — Boil It Down

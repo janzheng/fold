@@ -1,6 +1,6 @@
 ---
 name: proj:run
-description: "Run mxit tasks from TASKS files: find ready work, execute or dispatch agents, review results, and mark task status."
+description: "Execute ready TASKS work, verify results, and update status."
 ---
 
 # proj:run — Execute Tasks
