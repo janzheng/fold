@@ -1,2 +1,5 @@
 interface:
   short_description: "Find code bugs without changing code"
+
+policy:
+  allow_implicit_invocation: false

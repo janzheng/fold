@@ -1,2 +1,5 @@
 interface:
   short_description: "Execute ready tasks and verify results"
+
+policy:
+  allow_implicit_invocation: false

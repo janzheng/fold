@@ -1,2 +1,5 @@
 interface:
   short_description: "Try a product and find bugs or awkward UX"
+
+policy:
+  allow_implicit_invocation: false

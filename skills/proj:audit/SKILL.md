@@ -1,5 +1,6 @@
 ---
 name: proj:audit
+disable-model-invocation: true
 description: "Find unknown code bugs and security issues in a deep, read-only audit."
 ---
 

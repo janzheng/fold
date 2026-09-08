@@ -1,5 +1,6 @@
 ---
 name: proj:playtest
+disable-model-invocation: true
 description: "Try a product to find bugs and awkward UX; run, explore, or review then fix."
 ---
 

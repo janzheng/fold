@@ -1,2 +1,5 @@
 interface:
   short_description: "Rate and improve product UX"
+
+policy:
+  allow_implicit_invocation: false

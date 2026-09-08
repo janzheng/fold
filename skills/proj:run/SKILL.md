@@ -1,5 +1,6 @@
 ---
 name: proj:run
+disable-model-invocation: true
 description: "Execute ready TASKS work, verify results, and update status."
 ---
 
