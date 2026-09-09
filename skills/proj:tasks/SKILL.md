@@ -13,6 +13,10 @@ its existing structure; for a new project, a single `TASKS.md` is enough.
 - Preserve task identities, user edits, dependencies, and existing status syntax.
 - In the mxit format: `[ ]` open, `[!]` priority, `[@agent]` claimed, `[x]` done,
   `[~]` deferred. Preserve resolution brackets and explain completed/deferred work.
+- Before starting tracked work, claim the specific task as `[@session-owner]`.
+  Use a stable session-specific label, not bare `[@]` or a generic model name.
+  Read [claims.md](claims.md) for identity, shared-worktree visibility, and release
+  rules. Re-read before editing; do not take over or reset another owner's claim.
 - Mark done only from evidence. Capture follow-ups without silently expanding
   the current assignment or marking partial work complete.
 - Hold `#discovered` work for human scope review and `#needs-approval` work for

@@ -130,7 +130,7 @@ The verifier sees artifacts (code, tests, output), not arguments (agent's self-a
 For each task (whether you or a subagent):
 
 1. Read the task description and any linked docs (BRIEF, TICKET)
-2. Claim it: mark `[@]` or `[@agent-name]` in TASKS.md
+2. Claim it as `[@session-owner]` using the [task claim rules](../proj:tasks/claims.md). Use the agreed shared task file, respect existing owners, and confirm the saved claim before work; assign distinct worker identities when fanning out.
 3. Do the work
 4. If you discover new work during execution, note it as sub-items with `#discovered`. Hold these and their descendants for human review. Remove `#discovered` only after the human accepts the scope; approval gates still apply. Optional follow-ups do not need execution to finish the original scope; retain them as held follow-ups when recording its verified completion.
 
@@ -216,11 +216,11 @@ Do the work, then report:
 
 ## Recovery
 
-If a previous session died mid-work (orphaned `[@]` tasks):
-- Reset crashed tasks: `[@]` → `[ ]` (remove the agent claim)
-- Or use the CLI: `mxit recover TASKS.md`
-
-Always check for orphaned claims before starting a run.
+Reconcile individual claims with their owners; age or an unfamiliar session name
+does not prove a crash. Release only owned, stopped work or an explicitly authorized
+handoff after confirming no worker remains active. Preserve unrelated claims.
+The bundled `recover` command and `run` recovery step clear all claims without
+liveness checks: do not use them on a shared queue. See the task claim rules above.
 
 ## CLI (Optional)
 
@@ -229,7 +229,7 @@ The CLI still works for manual state management:
 ```bash
 mxit ready    TASKS.md [--json]               # Show ready tasks
 mxit ready    TASKS-api.md --context TASKS-MAP.md --context TASKS-auth.md
-mxit recover  TASKS.md                         # Reset crashed [@] → [ ]
+mxit recover  TASKS.md                       # Exclusive/offline queue only; resets ALL claims
 mxit claim    TASKS.md <line> --agent <name>   # Claim a task
 mxit done     TASKS.md <line> --result "msg"   # Mark complete
 mxit fail     TASKS.md <line> --error "msg" --max-retries 2

@@ -90,7 +90,7 @@ Use these conventions where appropriate. The bundled readiness helper enforces `
 - `#goal:name` — links a task to a goal defined in TASKS-DESIGN.md. The lightweight "why chain" — an agent reading the task can check what goal it serves.
 - `#needs-approval` — holds the task and descendants until explicit human approval. Record `[approved: reason]`, remove `#needs-approval`, and keep `[ ]` or `[!]` for execution. Approval is not completion; only verified execution earns `[x]`. For rejection use `[~] [rejected: reason]` and retain the gate so descendants remain held. Use where human sign-off is required.
 - `#bug` — marks a task as a bug fix. Grep `TASKS.done.md` for your fix log. If a bug is big enough to need triage, open a Linear ticket instead — mxit tracks work, not issues.
-- `[heartbeat: ISO-timestamp]` — agent writes this when it starts working on a task. Next agent checks freshness — if the timestamp is stale (e.g., >30min old), the previous agent likely crashed. Lightweight liveness detection without a server.
+- `[heartbeat: ISO-timestamp]` — optional last-progress evidence. Age alone does not establish a crash or authorize reclaiming a task; reconcile its owner first.
 
 ```markdown
 - [ ] Deploy to production #goal:launch #needs-approval
@@ -137,33 +137,14 @@ A task is **ready** (actionable) when ALL of:
 
 ### Multi-Agent Claiming
 
-Agent writes its name in the bracket:
+Before working, mark the task `[@session-owner]`, using a known session identity
+or a unique, explicitly local label. Keep it stable across the session. Read
+[claims.md](claims.md) for ownership, worker identity, worktree visibility,
+handoff, and recovery rules. Never use a generic model name to distinguish
+concurrent sessions. Claims are advisory; simultaneous writers need coordination.
 
-```markdown
-- [@claude-1] Refactor the auth module
-- [@codex-2] Fix the parser bug
-- [ ] Write tests (unclaimed)
-```
-
-No locking needed for 1-3 agents. Claims are advisory ("I'm here"), not locks.
-
-#### Agent nicknames
-
-When fanning out subagents, each picks a memorable `adjective-animal` name for itself:
-
-```markdown
-- [@bold-otter] Search API integration #search-api
-- [@calm-fox] Background job queue #bg-jobs
-- [@dry-hawk] CDN setup #cdn
-```
-
-Names are **ephemeral** — useful while agents are live, replaced by the resolution bracket when done:
-
-```markdown
-- [x] [done: Typesense integrated, 12 tests] Search API integration #search-api
-```
-
-The agent name disappears because it served its purpose. What matters after completion is what happened, not who did it.
+Verified completion replaces the status with `[x] [done: result]`; retain useful
+session/worktree annotations when they explain provenance or a handoff.
 
 ### Discovery
 
@@ -217,7 +198,7 @@ TASKS.md is RAM — it should stay short. When `[x]` items pile up, they need ga
 Change only the checkbox. Do NOT rewrite surrounding text:
 
 - Mark done: `- [ ] Task` → `- [x] [done: what happened] Task`
-- Mark ongoing: `- [ ] Task` → `- [@] Task` (or `- [@agent-name] Task`)
+- Mark ongoing: `- [ ] Task` → `- [@session-owner] Task`, after checking ownership and readiness.
 - Mark obsolete: `- [ ] Task` → `- [~] Task`
 - Flag important: `- [ ] Task` → `- [!] Task`
 
@@ -328,13 +309,15 @@ Update this when the architecture changes meaningfully, not on every commit.
 
 ## Team
 
-Declare who's available — humans and agents. Use these names in `[@name]` claims.
+Declare who's available — humans and agent roles. For agent claims, append a
+session-specific identity as described in claims.md; a role is not a session.
 
 - [*] @yawnxyz — human, product/design, final decisions, external tasks
 - [*] @claude — AI agent, Claude Code, primary dev + planning
 - [*] @codex — AI agent, Codex CLI, parallel coding tasks
 
-Not everyone needs to be listed. Add as needed. The `@name` is what goes in `[@name]` when claiming tasks.
+Not everyone needs to be listed. Add as needed. Human names can identify their
+claims; concurrent agent sessions need distinct owner labels rather than shared roles.
 
 ## Non-Goals
 
