@@ -183,6 +183,15 @@ async function getLinePreview(file: string, lineNum: number): Promise<string> {
   return lines[idx].trim();
 }
 
+/** Parse, warning on stderr about open tasks the parser skipped, so list/ready never look complete while work is hidden. Skipped done/deferred lines stay quiet; `mxit validate` lists everything. */
+function parseWarn(content: string, file: string): Task[] {
+  const hidden = validateFormat(content).errors.filter(e => e.skipped && !/\[\s*[xX~]\s*\]/.test(e.raw));
+  if (hidden.length) {
+    console.error(`warning: ${hidden.length} open task line${hidden.length === 1 ? "" : "s"} not read (L${hidden.map(e => e.line).join(", L")}). Run: mxit validate ${file}`);
+  }
+  return parseTasks(content);
+}
+
 async function readFile(file: string): Promise<string> {
   try {
     return await Deno.readTextFile(file);
@@ -222,7 +231,7 @@ async function main() {
     switch (command) {
       case "list": {
         const content = await readFile(file);
-        const tasks = parseTasks(content);
+        const tasks = parseWarn(content, file);
         const flat = flattenTasks(tasks);
         const filtered = applyFilters(flat, args);
 
@@ -243,7 +252,7 @@ async function main() {
 
       case "ready": {
         const content = await readFile(file);
-        const tasks = parseTasks(content);
+        const tasks = parseWarn(content, file);
         const ready = getReady(tasks);
         const filtered = applyFilters(ready, args);
 
@@ -263,7 +272,7 @@ async function main() {
 
       case "status": {
         const content = await readFile(file);
-        const tasks = parseTasks(content);
+        const tasks = parseWarn(content, file);
         const flat = flattenTasks(tasks);
         const ready = getReady(tasks);
         const now = new Date();
@@ -424,7 +433,7 @@ async function main() {
         }
 
         const content = await readFile(file);
-        const tasks = parseTasks(content);
+        const tasks = parseWarn(content, file);
         const flat = flattenTasks(tasks);
         const ready = getReady(tasks);
         const now = new Date();

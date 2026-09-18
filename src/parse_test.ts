@@ -113,6 +113,24 @@ Deno.test("validateFormat - catches malformed brackets", () => {
   assertEquals(result.errors[1].line, 3);
 });
 
+Deno.test("validateFormat - flags tasks the parser would skip", () => {
+  const md = `- [ ] Read
+* [ ] Star bullet
++ [x] Plus bullet
+1. [ ] Numbered
+2) [@claude-1] Numbered claimed
+- [X] Capital X
+* [Link](./doc.md)
+- [Link](./doc.md)`;
+  const { errors } = validateFormat(md);
+  const skipped = errors.filter((e) => e.skipped).map((e) => e.line);
+  assertEquals(skipped, [2, 3, 4, 5, 6]);
+  // A dash link bullet is still reported as before, but it is not a skipped task
+  assertEquals(errors.find((e) => e.line === 8)?.skipped, false);
+  assertEquals(errors.some((e) => e.line === 7), false);
+  assertEquals(parseTasks(md).length, 1);
+});
+
 Deno.test("validateFormat - valid file passes", () => {
   const result = validateFormat(EXAMPLE);
   assertEquals(result.valid, true);

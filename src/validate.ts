@@ -2,11 +2,16 @@ import type { ValidationError, ValidationResult } from "./types.ts";
 
 const TASK_RE = /^(\s*)- \[([ x~@!?*]|@[^\]]*)\]\s+(.+)$/;
 const LOOKS_LIKE_TASK_RE = /^(\s*)- \[/;
+/** A checkbox (not a `[link](url)`) after a bullet. The parser reads only `- ` bullets with a known status, so anything else matching this vanishes silently. */
+const CHECKBOX = String.raw`\[(?:[^\]]{0,2}|@[^\]]*)\](?!\()`;
+const OTHER_BULLET_TASK_RE = new RegExp(String.raw`^\s*(?:[*+]|\d+[.)])\s+` + CHECKBOX);
+const DASH_CHECKBOX_RE = new RegExp(String.raw`^\s*- ` + CHECKBOX);
 
 /**
  * Validate an mxit markdown file for format errors.
  * Returns errors for:
  * - Lines that look like tasks but don't match the regex
+ * - Checkboxes under a bullet other than `- ` (the parser skips them)
  * - Odd indentation (not a multiple of 2 spaces)
  * - Children without a parent
  */
@@ -19,6 +24,16 @@ export function validateFormat(markdown: string): ValidationResult {
     const line = lines[i];
     const lineNum = i + 1;
 
+    if (OTHER_BULLET_TASK_RE.test(line)) {
+      errors.push({
+        line: lineNum,
+        message: "Task not read — mxit tasks must start with `- `; `*`, `+`, and numbered bullets are skipped",
+        raw: line,
+        skipped: true,
+      });
+      continue;
+    }
+
     // Skip non-task-looking lines
     if (!LOOKS_LIKE_TASK_RE.test(line)) continue;
 
@@ -28,6 +43,7 @@ export function validateFormat(markdown: string): ValidationResult {
         line: lineNum,
         message: `Malformed task bracket — expected one of: [ ] [@] [x] [~] [?] [!] [*]`,
         raw: line,
+        skipped: DASH_CHECKBOX_RE.test(line),
       });
       continue;
     }

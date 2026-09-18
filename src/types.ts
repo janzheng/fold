@@ -61,6 +61,8 @@ export interface ValidationError {
   line: number;
   message: string;
   raw: string;
+  /** The line is a task the parser skips, so it is missing from list/ready/status. */
+  skipped?: boolean;
 }
 
 export interface ValidationResult {
