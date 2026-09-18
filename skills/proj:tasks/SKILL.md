@@ -9,7 +9,9 @@ Find the project's task convention and relevant task file before writing. Use
 its existing structure; for a new project, a single `TASKS.md` is enough.
 
 - Turn agreed work into concrete, verifiable tasks. Link a brief for substantial
-  design context. Keep uncommitted ideas in EXPLORE or conversation.
+  design context. An entry holds status, next step, and links; put progress and
+  findings in the linked brief or log, not the entry. Keep uncommitted ideas in
+  EXPLORE or conversation.
 - Preserve task identities, user edits, dependencies, and existing status syntax.
 - In the mxit format: `[ ]` open, `[!]` priority, `[@agent]` claimed, `[x]` done,
   `[~]` deferred. Preserve resolution brackets and explain completed/deferred work.
