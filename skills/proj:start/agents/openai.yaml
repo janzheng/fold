@@ -1,0 +1,5 @@
+interface:
+  display_name: "Proj: Start Here"
+  short_description: "Choose the right project workflow"
+policy:
+  allow_implicit_invocation: true

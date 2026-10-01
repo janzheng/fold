@@ -1,0 +1,5 @@
+interface:
+  short_description: "Make a system easier for agents to use"
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,5 @@
+interface:
+  short_description: "Fix recurring development-workflow friction"
+
+policy:
+  allow_implicit_invocation: false

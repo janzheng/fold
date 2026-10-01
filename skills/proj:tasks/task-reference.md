@@ -15,10 +15,10 @@ Former frontmatter detail, kept here so global lookup stays compact:
 The **track** facet of fold. Set up and manage `TASKS.md` files, scale to the full TASKS family for bigger projects, and run the task lifecycle with multi-agent coordination.
 
 > **Canonical repos:** This skill is the implementation layer. The canonical spec and parser live elsewhere:
-> - **Spec:** `/Users/janzheng/Desktop/Projects/__active/_apps/mxit/MXIT_SPEC.md`
-> - **Parser/CLI:** `/Users/janzheng/Desktop/Projects/__active/_apps/mxit/src/`
-> - **fold (parent):** `/Users/janzheng/Desktop/Projects/__active/_apps/fold/`
-> - **Skills (this repo):** `/Users/janzheng/Desktop/Projects/mcp-hub/skills/`
+> - **Spec:** `MXIT_SPEC.md` in the Fold repository
+> - **Parser/CLI:** `src/` in the Fold repository
+> - **Skill source:** `skills/proj:tasks/` in the Fold repository
+> - **Distribution:** MCP Hub's `skills/proj:tasks/` and agent installations
 
 ## Quick Setup
 
@@ -46,7 +46,7 @@ For bigger projects (3+ areas), also suggest TASKS-MAP.md and TASKS-DESIGN.md �
 - `/proj:playtest` — discoveries get emitted as mxit tasks with `#found`
 - Large findings stay in TASKS for scope review; old `#autorefine` tags do not start a loop.
 - `/proj:explore` — speculative exploration (EXPLORE files) feeds into TASKS when committed
-- `/fold` — the full loop: discover → track → improve → fold again
+- `proj:checkpoint` — reconcile task status, evidence, and next steps after meaningful work
 
 ---
 

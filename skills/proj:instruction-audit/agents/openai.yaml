@@ -1,0 +1,5 @@
+interface:
+  short_description: "Review agent rules without changing them"
+
+policy:
+  allow_implicit_invocation: false

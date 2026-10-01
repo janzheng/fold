@@ -17,7 +17,7 @@ Use when the user says "playtest this", "run playtest", "execute playtest", "try
 
 - `/proj:tasks` — discoveries get emitted as mxit tasks with `#found`
 - `/proj:run` — execute ready findings after task scope and approval gates are satisfied
-- `/fold` — the full loop: discover → track → improve → fold again
+- `proj:checkpoint` — reconcile findings, task status, and next steps after meaningful work
 
 ## Three modes
 
