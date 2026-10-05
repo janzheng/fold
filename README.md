@@ -6,18 +6,18 @@ prefix changed from `fold:` to `proj:`.
 
 ## Skills
 
-`skills/` contains all 20 active `proj:*` skills. `proj:start` routes a request
+`skills/` contains all 21 active `proj:*` skills. `proj:start` routes a request
 when you are unsure which one to use.
 
 | Work | Skills |
 | --- | --- |
 | Plan and hand off | `proj:explore`, `proj:brief`, `proj:tasks`, `proj:delegate`, `proj:run` |
-| Keep project records | `proj:checkpoint`, `proj:journal`, `proj:note`, `proj:research`, `proj:runlog`, `proj:lessons`, `proj:changelog` |
+| Keep project records | `proj:checkpoint`, `proj:journal`, `proj:note`, `proj:research`, `proj:runlog`, `proj:lessons`, `proj:changelog`, `proj:sop` |
 | Investigate and improve | `proj:debug`, `proj:audit`, `proj:playtest`, `proj:11star`, `proj:agent-ready`, `proj:instruction-audit`, `proj:tuneup` |
 
 Eight skills (`proj:11star`, `proj:audit`, `proj:brief`, `proj:debug`,
 `proj:explore`, `proj:playtest`, `proj:run`, `proj:tasks`) are authored here.
-The other twelve are portable snapshots of canonical sources in MCP Hub's
+The other thirteen are portable snapshots of canonical sources in MCP Hub's
 `skills-workshop/`. The source map there is `skills-workshop/proj-sources.json`.
 Edit the owning source first, then refresh this snapshot and Hub's registry,
 backup, and installed copies. Do not author in an installed skill directory.

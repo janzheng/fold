@@ -23,6 +23,7 @@ workflow that completes the request; do not make the user learn the menu.
 | Record dated reasoning, decisions, attempts, or surprises | `proj:journal` |
 | Collect external links, articles, or repositories with notes | `proj:research` |
 | Record a test, experiment, benchmark, or operation and its result | `proj:runlog` |
+| Create, trial, revise, or retire a repeatable project procedure | `proj:sop` |
 | Consult or save a reusable gotcha | `proj:lessons` |
 | Record meaningful completed behavior and its impact | `proj:changelog` |
 | Trace one known bug, error, or failing test | `proj:debug` |

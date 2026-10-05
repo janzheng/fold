@@ -5,7 +5,7 @@ name of the task format and CLI. Read `README.md` for the current inventory and
 `_archive/README.md` for retired skills. Do not use or install `fold:*` commands
 from the archive.
 
-Author the eight Fold-owned skills in `skills/proj:*/`. The twelve workshop-owned
+Author the eight Fold-owned skills in `skills/proj:*/`. The thirteen workshop-owned
 skills in that folder are portable snapshots; edit their canonical MCP Hub
 `skills-workshop/proj:*/` source before refreshing them. MCP Hub's
 `skills-workshop/proj-sources.json` lists ownership. Its registry, backup, and
